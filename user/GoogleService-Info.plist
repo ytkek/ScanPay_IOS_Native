@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>349293316539-9lq97tbe934l1dbcl9n67kdguf27bev4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.349293316539-9lq97tbe934l1dbcl9n67kdguf27bev4</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAi-dJCwrLDfC93Om8XOLfXS-0r_Z1dj0Q</string>
+	<key>GCM_SENDER_ID</key>
+	<string>349293316539</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.scanpay.user</string>
+	<key>PROJECT_ID</key>
+	<string>project--2970025997449306723</string>
+	<key>STORAGE_BUCKET</key>
+	<string>project--2970025997449306723.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:349293316539:ios:0c037b013af494634c5c9e</string>
+	<key>DATABASE_URL</key>
+	<string>https://project--2970025997449306723.firebaseio.com</string>
+</dict>
+</plist>
