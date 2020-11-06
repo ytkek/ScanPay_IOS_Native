@@ -123,15 +123,21 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
     func validatelogin()
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostSignUp_Validate_LoginID.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Validate_LoginID.aspx")
                            guard let requestUrl = url2 else { fatalError() }
                            // Prepare URL Request Object
                            var request = URLRequest(url: requestUrl)
                            request.httpMethod = "POST"
+            
+            let value = "s7OyGTP6ZZmL7t3z"
+            
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                             
         let phoneinput = "60\(self.phone.text ?? "")"
                            // HTTP Request Parameters which will be sent in HTTP Request Body
-                             let postString = "LoginID=\(phoneinput)";
+        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                              print(postString)
                            // Set HTTP Request Body
                            request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -207,15 +213,22 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
     func sendOTP()
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostSignUp_Send_OTP.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Send_OTP.aspx")
                            guard let requestUrl = url2 else { fatalError() }
                            // Prepare URL Request Object
                            var request = URLRequest(url: requestUrl)
                            request.httpMethod = "POST"
+            
+            let value =  "s7OyGTP6ZZmL7t3z"
+                           
+                           
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                             
         let phoneinput = "60\(self.phone.text ?? "")"
                            // HTTP Request Parameters which will be sent in HTTP Request Body
-                             let postString = "LoginID=\(phoneinput)";
+        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                              print(postString)
                            // Set HTTP Request Body
                            request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -489,17 +502,23 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
        func signup_update_password()
        {
         if Reachability.isConnectedToNetwork(){
-         let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostSignUp_Update_App_Password.aspx")
+         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Update_App_Password.aspx")
                                   guard let requestUrl = url2 else { fatalError() }
                                   // Prepare URL Request Object
                                   var request = URLRequest(url: requestUrl)
                                   request.httpMethod = "POST"
-                                   
+                 
+                    let value =  "s7OyGTP6ZZmL7t3z"
+                                      
+                    let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                       
+                    let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
                let phoneinput = "60\(self.phone.text ?? "")"
                                   // HTTP Request Parameters which will be sent in HTTP Request Body
         global.otp = self.OTPresult
         global.loginid = phoneinput
-        let postString = "LoginID=\(phoneinput)&AppPassword=\(confirmpassword_input.text ?? "")&Otp=\(self.OTPresult ?? "")";
+        let postString = "LoginID=\(phoneinput)&AppPassword=\(confirmpassword_input.text ?? "")&Otp=\(self.OTPresult ?? "")&Token=\(postStringencoding ?? "")";
                                     print(postString)
                                   // Set HTTP Request Body
                                   request.httpBody = postString.data(using: String.Encoding.utf8);

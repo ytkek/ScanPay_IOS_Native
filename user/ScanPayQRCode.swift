@@ -152,54 +152,131 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
         else
         {
             self.qramount = self.amount.text ?? ""
-            validate_pinnumber()
+           // validate_pinnumber()
+            duplicate_transaction_task()
         }
         
     }
+    
+    func duplicate_transaction_task()
+    {
+        if Reachability.isConnectedToNetwork(){
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Duplicate_Transaction_Alert.aspx")
+                    guard let requestUrl = url2 else { fatalError() }
+                                                                 // Prepare URL Request Object
+                    var request = URLRequest(url: requestUrl)
+                        request.httpMethod = "POST"
+                       
+                    let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                       
+                       let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                       
+                         let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+            let postString = "MerchantID=\(self.merchantid)&Type=\(self.type)&Amount=\(self.amount.text ?? "")&MemberID=\(UserPreference.retreiveLoginID())&Token=\(postStringencoding ?? "")";
+            
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+                            
+                                                                 
+                                                                // Perform HTTP Request
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                                                                        
+                                                                        // Check for Error
+            if let error = error {
+                    print("Error took place \(error)")
+                    return
+            }
+                                                                 
+                                                                        // Convert HTTP Response Data to a String
+            if let data = data, let dataString = String(data: data, encoding: .utf8) {
+            print("Response data string:\n \(dataString)")
+                  let result = dataString
+                    DispatchQueue.main.async()
+                    {
+                        if result == "Transaction Duplicate Found"
+                        {
+                            let alert = UIAlertController(title: "Same merchant and amount detected, Are you sure to continue?", message: "" , preferredStyle : .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+                                alert.dismiss(animated:true, completion: nil)
+                                                                                       
+                               self.validate_pinnumber()
+                                }))
+
+                                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+                                alert.dismiss(animated:true, completion: nil)
+                                self.dismiss(animated: true, completion: nil)
+                                }))
+                                self.present(alert,animated: true, completion: nil)
+                        }
+                        else if result == "Transaction Duplicate Not Found"
+                        {
+                            self.validate_pinnumber()
+                        }
+               
+                    }
+                    
+                
+            }
+            }
+            task.resume()
+            
+            
+        }
+    }
+    
     func comfirm_pay_task()
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Confirm_Pay.aspx")
-                                                  guard let requestUrl = url2 else { fatalError() }
-                                                  // Prepare URL Request Object
-                                                  var request = URLRequest(url: requestUrl)
-                                                  request.httpMethod = "POST"
-                                                  
-            let postString = "LoginID=\(UserPreference.retreiveLoginID())&MerchantID=\(self.merchantid)&MerchantName=\(self.merchant_name_single)&type=\(self.type)&Amount=\(self.amount.text ?? "")&qrcode=\(self.qrcode)&dyqrcode=\(self.lqrcode)";
-                                                                                             // Set HTTP Request Body
-                                                                                             request.httpBody = postString.data(using: String.Encoding.utf8);
-              
-                                                   
-                                                  // Perform HTTP Request
-                                                  let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                                          
-                                                          // Check for Error
-                                                          if let error = error {
-                                                              print("Error took place \(error)")
-                                                              return
-                                                          }
-                                                   
-                                                          // Convert HTTP Response Data to a String
-                                                          if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                          print("Response data string:\n \(dataString)")
-                                                          
-                                                      DispatchQueue.main.async()
-                                                    {
-                                                       self.app_success_message_log(success_message: "success payment \(self.lqrcode ?? "")\(self.qrcode ?? "")")
-                                                        self.payment_success.isHidden = false
-                                                        self.payment_success_amount.text = "Amount:  \(self.amount.text ?? "")"
-                                                        var currentDateTime = Date()
-                                                        let dateFormatter = DateFormatter()
-                                                        dateFormatter.dateFormat = "dd MMM yyyy HH:mm:ss"
-                                                        
-                                                        let result = dateFormatter.string(from:currentDateTime)
-                                                        
-                                                        self.payment_success_date.text = result
-                                                        self.payment_success_merchant.text = self.merchant_name_single
-                                                    }
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Confirm_Pay.aspx")
+                                                      guard let requestUrl = url2 else { fatalError() }
+                                                      // Prepare URL Request Object
+                                                      var request = URLRequest(url: requestUrl)
+                                                      request.httpMethod = "POST"
+            
+                   let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+            
+                let postString = "LoginID=\(UserPreference.retreiveLoginID())&MerchantID=\(self.merchantid)&MerchantName=\(self.merchant_name_single)&type=\(self.type)&Amount=\(self.amount.text ?? "")&qrcode=\(self.qrcode)&dyqrcode=\(self.lqrcode)&Token=\(postStringencoding ?? "")";
+                                                                                                 // Set HTTP Request Body
+                                                                                                 
+                   request.httpBody = postString.data(using: String.Encoding.utf8);
+                  
+                                                       
+                                                      // Perform HTTP Request
+                                                      let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                                                              
+                                                              // Check for Error
+                                                              if let error = error {
+                                                                  print("Error took place \(error)")
+                                                                  return
+                                                              }
+                                                       
+                                                              // Convert HTTP Response Data to a String
+                                                              if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                                                              print("Response data string:\n \(dataString)")
+                                                              
+                                                          DispatchQueue.main.async()
+                                                        {
+                                                           self.app_success_message_log(success_message: "success payment \(self.lqrcode ?? "")\(self.qrcode ?? "")")
+                                                           self.payment_success.isHidden = false
+                                                           self.payment_success_amount.text = "Amount:  \(self.amount.text ?? "")"
+                                                           var currentDateTime = Date()
+                                                           let dateFormatter = DateFormatter()
+                                                           dateFormatter.dateFormat = "dd MMM yyyy HH:mm:ss"
+                                                           
+                                                           let result = dateFormatter.string(from:currentDateTime)
+                                                           
+                                                           self.payment_success_date.text = result
+                                                           self.payment_success_merchant.text = self.merchant_name_single
+                                                        }
+                }
             }
-        }
-                                                  task.resume()
+                                                      task.resume()
+
          }
         else
                {
@@ -316,18 +393,24 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
     func validate_pinnumber()
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Validate_PinNumber.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Validate_PinNumber.aspx")
                                     guard let requestUrl = url2 else { fatalError() }
                                     // Prepare URL Request Object
                                     var request = URLRequest(url: requestUrl)
                                     request.httpMethod = "POST"
+            
+              let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                                 
                                       let phoneinput = UserPreference.retreiveLoginID()
 let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? "")\(self.pin4.text ?? "")\(self.pin5.text ?? "")\(self.pin6.text ?? "")"
                                     // HTTP Request Parameters which will be sent in HTTP Request Body
         print (pinnum)
       //   if let myString = pinnum {
-                                      let postString = "LoginID=\(phoneinput)&Pin_Number=\(pinnum)";
+                                      let postString = "LoginID=\(phoneinput)&Pin_Number=\(pinnum)&Token=\(postStringencoding ?? "")";
                                     // Set HTTP Request Body
                                     request.httpBody = postString.data(using: String.Encoding.utf8);
                                     // Perform HTTP Request
@@ -444,6 +527,7 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
                                                         let alert = UIAlertController(title: "Paid to Merchant \(self.merchant_name_single)", message: "Amount : RM \(self.amount.text ?? "") " , preferredStyle : .alert)
                                                         alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action: UIAlertAction!) in
                                                             alert.dismiss(animated:true, completion: nil)
+                                                            
                                                             self.comfirm_pay_task()
                                                          }))
 
@@ -720,17 +804,23 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
     }
     @IBAction func confirm_save_otp(_ sender: UIButton) {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Save_OTP.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Save_OTP.aspx")
                                             guard let requestUrl = url2 else { fatalError() }
                                             // Prepare URL Request Object
                                             var request = URLRequest(url: requestUrl)
                                             request.httpMethod = "POST"
                                             
-                                           
-                                              let phoneinput = UserPreference.retreiveLoginID()
+                                           let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+                         let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+            
+            let phoneinput = UserPreference.retreiveLoginID()
                                             let otpinput = enter_newotp.text
         if let myString = otpinput {
-                                             let postString = "LoginID=\(phoneinput)&OTP=\(myString)";
+                                             let postString = "LoginID=\(phoneinput)&OTP=\(myString)&Token=\(postStringencoding ?? "")";
                                                                                        // Set HTTP Request Body
                                                                                        request.httpBody = postString.data(using: String.Encoding.utf8);
         }
@@ -790,16 +880,22 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
     
     @IBAction func getnewotp(_ sender: UIButton) {
            if Reachability.isConnectedToNetwork(){
-         let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Send_OTP.aspx")
+         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Send_OTP.aspx")
                               guard let requestUrl = url2 else { fatalError() }
                               // Prepare URL Request Object
                               var request = URLRequest(url: requestUrl)
                               request.httpMethod = "POST"
+            
+             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                               
         mobile_id.text = UserPreference.retreiveLoginID().masked(4,reversed: true)
                                 let phoneinput = UserPreference.retreiveLoginID()
                               // HTTP Request Parameters which will be sent in HTTP Request Body
-                                let postString = "LoginID=\(phoneinput)";
+                                let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                               // Set HTTP Request Body
                               request.httpBody = postString.data(using: String.Encoding.utf8);
                               // Perform HTTP Request
@@ -850,16 +946,22 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
     
     @IBAction func resend(_ sender: UIButton) {
         if Reachability.isConnectedToNetwork(){
-         let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Send_OTP.aspx")
+         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Send_OTP.aspx")
                                      guard let requestUrl = url2 else { fatalError() }
                                      // Prepare URL Request Object
                                      var request = URLRequest(url: requestUrl)
                                      request.httpMethod = "POST"
                                      
+             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+                            
                                     
                                        let phoneinput = UserPreference.retreiveLoginID()
                                      // HTTP Request Parameters which will be sent in HTTP Request Body
-                                       let postString = "LoginID=\(phoneinput)";
+                                       let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                                      // Set HTTP Request Body
                                      request.httpBody = postString.data(using: String.Encoding.utf8);
                                      // Perform HTTP Request
@@ -1011,13 +1113,13 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
             MonthlyExpTask()
             CreditBalanceTask()
             
-            for i in 0..<result.count
-        {
-           
+        //    for i in 0..<result.count
+        //{
+          
             if result.count == 3
             {
                 self.type = "pay"
-                merchantid = result[0]
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        merchantid = result[0]
                 qr_amount = result[1]
                 lqrcode = result[2]
                 MerchantInfo_Task_Pay(type: self.type, merchantid: merchantid, qr_amount: qr_amount, lqrcode: lqrcode,qrcode:qrcode)
@@ -1033,13 +1135,13 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
             }
             
             else if result.count == 1
-                       
+           
             {
                 self.type = "pay_cashier"
                 merchantid = result[0]
                 MerchantInfo_Task_Pay(type: self.type, merchantid: merchantid, qr_amount: qr_amount, lqrcode: lqrcode,qrcode:qrcode)
             }
-        }
+    //    }
         }
       //getOTPTASK
          
@@ -1051,16 +1153,22 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
     func CheckDailyLimit()
     {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_CheckDailyExpLimit.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_CheckDailyExpLimit.aspx")
                                      guard let requestUrl = url2 else { fatalError() }
                                      // Prepare URL Request Object
                                      var request = URLRequest(url: requestUrl)
                                      request.httpMethod = "POST"
-                                     
+                                    
+                        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                          
+                          
+                          let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+                        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                                     
                                        let phoneinput = UserPreference.retreiveLoginID()
                                      // HTTP Request Parameters which will be sent in HTTP Request Body
-                                       let postString = "LoginID=\(phoneinput)";
+                                       let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                                      // Set HTTP Request Body
                                      request.httpBody = postString.data(using: String.Encoding.utf8);
                                      // Perform HTTP Request
@@ -1138,16 +1246,22 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
     func MonthlyExpTask()
     {
           if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_MonthlyExp.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_MonthlyExp.aspx")
                                             guard let requestUrl = url2 else { fatalError() }
                                             // Prepare URL Request Object
                                             var request = URLRequest(url: requestUrl)
                                             request.httpMethod = "POST"
                                             
+                        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                          
+                          
+                          let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+                        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                                            
                                               let phoneinput = UserPreference.retreiveLoginID()
                                             // HTTP Request Parameters which will be sent in HTTP Request Body
-                                              let postString = "LoginID=\(phoneinput)";
+                                              let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                                             // Set HTTP Request Body
                                             request.httpBody = postString.data(using: String.Encoding.utf8);
                                             // Perform HTTP Request
@@ -1193,16 +1307,23 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
     func DailyExpTask()
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_DailyExp.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_DailyExp.aspx")
                                      guard let requestUrl = url2 else { fatalError() }
                                      // Prepare URL Request Object
                                      var request = URLRequest(url: requestUrl)
                                      request.httpMethod = "POST"
-                                     
-                                    
+            
+                                     let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                                                    
+                                                    
+                                    let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            
+                                      let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
                                        let phoneinput = UserPreference.retreiveLoginID()
                                      // HTTP Request Parameters which will be sent in HTTP Request Body
-                                       let postString = "LoginID=\(phoneinput)";
+                                       let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                                      // Set HTTP Request Body
                                      request.httpBody = postString.data(using: String.Encoding.utf8);
                                      // Perform HTTP Request
@@ -1249,16 +1370,23 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
     func CreditBalanceTask()
     {
         if Reachability.isConnectedToNetwork(){
-         let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_CreditBalance.aspx")
+         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_CreditBalance.aspx")
                               guard let requestUrl = url2 else { fatalError() }
                               // Prepare URL Request Object
                               var request = URLRequest(url: requestUrl)
                               request.httpMethod = "POST"
                               
+            
+                        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                          
+                          
+                          let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+                        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                              
                                 let phoneinput = UserPreference.retreiveLoginID()
                               // HTTP Request Parameters which will be sent in HTTP Request Body
-                                let postString = "LoginID=\(phoneinput)";
+                                let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                               // Set HTTP Request Body
                               request.httpBody = postString.data(using: String.Encoding.utf8);
                               // Perform HTTP Request
@@ -1335,13 +1463,20 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
     func MerchantInfo_Task_Pay(type:String,merchantid:String,qr_amount:String,lqrcode:String,qrcode:String)
     {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_MerchantInfo.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_MerchantInfo.aspx")
                                                   guard let requestUrl = url2 else { fatalError() }
                                                   // Prepare URL Request Object
                                                   var request = URLRequest(url: requestUrl)
                                                   request.httpMethod = "POST"
-                                                  
-        let postString = "type=\(self.type)&merchantid=\(self.merchantid)&amount=\(self.amount.text ?? "")&dynamicqrcode=\(self.lqrcode)&qrcode=\(self.qrcode)";
+                                                  let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                                                                
+                                                                
+                                                let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+            
+        let postString = "type=\(self.type)&merchantid=\(self.merchantid)&amount=\(self.amount.text ?? "")&dynamicqrcode=\(self.lqrcode)&qrcode=\(self.qrcode)&Token=\(postStringencoding ?? "")";
                                                                                              // Set HTTP Request Body
                                                                                              request.httpBody = postString.data(using: String.Encoding.utf8);
               
@@ -1441,16 +1576,23 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
      public  func validateOTPTask()
        {
          if Reachability.isConnectedToNetwork(){
-           let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Validate_OTP.aspx")
+           let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Validate_OTP.aspx")
                        guard let requestUrl = url2 else { fatalError() }
                        // Prepare URL Request Object
                        var request = URLRequest(url: requestUrl)
                        request.httpMethod = "POST"
+            
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                          
+                          
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                         let currentotp = retreivelocalOTP()
                       
                          let phoneinput = UserPreference.retreiveLoginID()
                        // HTTP Request Parameters which will be sent in HTTP Request Body
-                         let postString = "LoginID=\(phoneinput)";
+                         let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                        // Set HTTP Request Body
                        request.httpBody = postString.data(using: String.Encoding.utf8);
                        // Perform HTTP Request

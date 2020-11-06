@@ -121,7 +121,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         let buttonBarViewAux = buttonBarView ?? {
                 let flowLayout = UICollectionViewFlowLayout()
                 flowLayout.scrollDirection = .horizontal
-                let buttonBarHeight = settings.style.buttonBarHeight ?? 100
+                let buttonBarHeight = settings.style.buttonBarHeight ?? 44
                 let buttonBar = ButtonBarView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: buttonBarHeight), collectionViewLayout: flowLayout)
                 buttonBar.backgroundColor = .orange
                 buttonBar.selectedBar.backgroundColor = .black
@@ -330,10 +330,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor
         cell.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.backgroundColor
         if let image = indicatorInfo.image {
-            cell.imageView.frame.size = CGSize(width: 200, height: 200)
             cell.imageView.image = image
-           
-            
         }
         if let highlightedImage = indicatorInfo.highlightedImage {
             cell.imageView.highlightedImage = highlightedImage

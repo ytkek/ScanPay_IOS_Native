@@ -360,15 +360,22 @@ class UserProfileCustomPin: UIViewController ,UITextFieldDelegate{
     func reloadpage()
           {
             if Reachability.isConnectedToNetwork(){
-              let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetMyProfileList.aspx")
+              let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetMyProfileList.aspx")
                      guard let requestUrl = url2 else { fatalError() }
                      // Prepare URL Request Object
                      var request = URLRequest(url: requestUrl)
                      request.httpMethod = "POST"
                       
+                let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                
+                  let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                
+                let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+                
+                
                        let phoneinput = UserPreference.retreiveLoginID()
                      // HTTP Request Parameters which will be sent in HTTP Request Body
-                       let postString = "LoginID=\(phoneinput)";
+                       let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                        print(postString)
                      // Set HTTP Request Body
                      request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -470,19 +477,26 @@ class UserProfileCustomPin: UIViewController ,UITextFieldDelegate{
     func savepin()
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostUserProfile_Pin.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_Pin.aspx")
                             guard let requestUrl = url2 else { fatalError() }
                             // Prepare URL Request Object
                             var request = URLRequest(url: requestUrl)
                             request.httpMethod = "POST"
-                            let str = "\(otp1.text!)\(otp2.text!)\(otp3.text!)\(otp4.text!)\(otp5.text!)\(otp6.text!)"
+            
+                     let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+            let str = "\(otp1.text!)\(otp2.text!)\(otp3.text!)\(otp4.text!)\(otp5.text!)\(otp6.text!)"
         
         
         
                               let phoneinput = UserPreference.retreiveLoginID()
                              
                              
-                                   let postString = "LoginID=\(phoneinput)&PIN=\(str)";
+                                   let postString = "LoginID=\(phoneinput)&PIN=\(str)&Token=\(postStringencoding ?? "")";
                              
                              // HTTP Request Parameters which will be sent in HTTP Request Body
                            
@@ -539,15 +553,19 @@ class UserProfileCustomPin: UIViewController ,UITextFieldDelegate{
     func sendforget_pin()
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/Recover_Pin.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/Recover_Pin.aspx")
                             guard let requestUrl = url2 else { fatalError() }
                             // Prepare URL Request Object
                             var request = URLRequest(url: requestUrl)
                             request.httpMethod = "POST"
-                             
-                             
+             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+             
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                             // HTTP Request Parameters which will be sent in HTTP Request Body
-        let postString = "Pin_Number=\(self.old_otp_result)&Email=\(self.email)&Name=\(self.name)";
+        let postString = "Pin_Number=\(self.old_otp_result)&Email=\(self.email)&Name=\(self.name)&Token=\(postStringencoding ?? "")";
                               print(postString)
                             // Set HTTP Request Body
                             request.httpBody = postString.data(using: String.Encoding.utf8);

@@ -29,7 +29,6 @@ open class ButtonBarViewCell: UICollectionViewCell {
     @IBOutlet open var imageView: UIImageView!
     @IBOutlet open var label: UILabel!
 
-    
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
@@ -51,5 +50,3 @@ open class ButtonBarViewCell: UICollectionViewCell {
         }
     }
 }
-
-

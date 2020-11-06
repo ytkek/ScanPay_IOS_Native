@@ -29,15 +29,21 @@ class UserProfileCustomRemarks: UIViewController,UITextFieldDelegate {
     func reloadpage()
        {
         if Reachability.isConnectedToNetwork(){
-           let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetMyProfileList.aspx")
+           let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetMyProfileList.aspx")
                   guard let requestUrl = url2 else { fatalError() }
                   // Prepare URL Request Object
                   var request = URLRequest(url: requestUrl)
                   request.httpMethod = "POST"
                    
+             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
                     let phoneinput = UserPreference.retreiveLoginID()
                   // HTTP Request Parameters which will be sent in HTTP Request Body
-                    let postString = "LoginID=\(phoneinput)";
+                    let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                     print(postString)
                   // Set HTTP Request Body
                   request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -86,16 +92,22 @@ class UserProfileCustomRemarks: UIViewController,UITextFieldDelegate {
     @IBAction func save(_ sender: UIButton)
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostUserProfile_Remarks.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_Remarks.aspx")
                      guard let requestUrl = url2 else { fatalError() }
                      // Prepare URL Request Object
                      var request = URLRequest(url: requestUrl)
                      request.httpMethod = "POST"
                       
+                let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+                let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
                        let phoneinput = UserPreference.retreiveLoginID()
                        let Remarks = remarks_edit.text
                       if let myString = Remarks {
-                            let postString = "LoginID=\(phoneinput)&Remarks=\(myString)";
+                            let postString = "LoginID=\(phoneinput)&Remarks=\(myString)&Token=\(postStringencoding ?? "")";
                       
                       // HTTP Request Parameters which will be sent in HTTP Request Body
                     

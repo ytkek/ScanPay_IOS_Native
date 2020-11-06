@@ -118,13 +118,24 @@ class Location: UIViewController, UITableViewDelegate, UITableViewDataSource {
     public  func reloadalldatapage()
          {
           if Reachability.isConnectedToNetwork(){
-             let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetAllMerchantList.aspx")
+             let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetAllMerchantList.aspx")
                          guard let requestUrl = url2 else { fatalError() }
                          // Prepare URL Request Object
                          var request = URLRequest(url: requestUrl)
-                         request.httpMethod = "GET"
+                         request.httpMethod = "POST"
+            
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+                                      
+            
+            
+            let postString = "Token=\(postStringencoding ?? "")";
+                print(postString)
                           
-                  
+            request.httpBody = postString.data(using: String.Encoding.utf8);
                          // Set HTTP Request Body
                          //request.httpBody = postString.data(using: String.Encoding.utf8);
                          // Perform HTTP Request

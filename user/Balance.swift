@@ -176,15 +176,25 @@ class Balance: UIViewController,UITableViewDelegate, UITableViewDataSource{
     public  func getBalanceCredit()
     {
           if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetBalance_TotalCredit.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetBalance_TotalCredit.aspx")
                     guard let requestUrl = url2 else { fatalError() }
                     // Prepare URL Request Object
                     var request = URLRequest(url: requestUrl)
                     request.httpMethod = "POST"
                      
+        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                      
+                      
+                      let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                         
+                                 // Set HTTP Request Body
+                                 // Perform HTTP Request
+                      
+                      let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
                       let phoneinput = UserPreference.retreiveLoginID()
                     // HTTP Request Parameters which will be sent in HTTP Request Body
-                      let postString = "LoginID=\(phoneinput)";
+                      let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                       print(postString)
                     // Set HTTP Request Body
                     request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -229,15 +239,24 @@ class Balance: UIViewController,UITableViewDelegate, UITableViewDataSource{
     public  func getDailylimit()
     {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetBalance_DailyLimit.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetBalance_DailyLimit.aspx")
                            guard let requestUrl = url2 else { fatalError() }
                            // Prepare URL Request Object
                            var request = URLRequest(url: requestUrl)
                            request.httpMethod = "POST"
+    let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                  
+                  
+                  let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                     
+                             // Set HTTP Request Body
+                             // Perform HTTP Request
+                  
+                  let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                             
         let phoneinput = UserPreference.retreiveLoginID()
                            // HTTP Request Parameters which will be sent in HTTP Request Body
-                             let postString = "LoginID=\(phoneinput)";
+                             let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                              print(postString)
                            // Set HTTP Request Body
                            request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -281,15 +300,25 @@ class Balance: UIViewController,UITableViewDelegate, UITableViewDataSource{
     public  func getDailybalance()
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetBalance_DailyExp.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetBalance_DailyExp.aspx")
                            guard let requestUrl = url2 else { fatalError() }
                            // Prepare URL Request Object
                            var request = URLRequest(url: requestUrl)
                            request.httpMethod = "POST"
-                            
+                    let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                  
+                  
+                  let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                     
+                             // Set HTTP Request Body
+                             // Perform HTTP Request
+                  
+                  let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+            
                              let phoneinput = UserPreference.retreiveLoginID()
                            // HTTP Request Parameters which will be sent in HTTP Request Body
-                             let postString = "LoginID=\(phoneinput)";
+                             let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                              print(postString)
                            // Set HTTP Request Body
                            request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -335,15 +364,25 @@ class Balance: UIViewController,UITableViewDelegate, UITableViewDataSource{
     public  func getcurrentdate_statement()
        {
          if Reachability.isConnectedToNetwork(){
-           let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetBalance_CurrentDate_Statement.aspx")
+           let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetBalance_CurrentDate_Statement.aspx")
                               guard let requestUrl = url2 else { fatalError() }
                               // Prepare URL Request Object
                               var request = URLRequest(url: requestUrl)
                               request.httpMethod = "POST"
+            
+                     let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                      
+                      
+                      let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                         
+                                 // Set HTTP Request Body
+                                 // Perform HTTP Request
+                      
+                      let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                                
                                 let phoneinput = UserPreference.retreiveLoginID()
                               // HTTP Request Parameters which will be sent in HTTP Request Body
-                                let postString = "LoginID=\(phoneinput)";
+                    let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                                 print(postString)
                               // Set HTTP Request Body
                               request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -398,15 +437,24 @@ class Balance: UIViewController,UITableViewDelegate, UITableViewDataSource{
     public  func getsearchdate_statement()
           {
             if Reachability.isConnectedToNetwork(){
-              let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetBalance_SearchDate_Statement.aspx")
+              let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetBalance_SearchDate_Statement.aspx")
                                  guard let requestUrl = url2 else { fatalError() }
                                  // Prepare URL Request Object
                                  var request = URLRequest(url: requestUrl)
                                  request.httpMethod = "POST"
-                                  
+    let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+    
+    
+    let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+       
+               // Set HTTP Request Body
+               // Perform HTTP Request
+    
+    let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+                
                                    let phoneinput = UserPreference.retreiveLoginID()
                                  // HTTP Request Parameters which will be sent in HTTP Request Body
-            let postString = "LoginID=\(phoneinput)&DateFrom=\(datefrom.text ?? "")&DateTo=\(dateto.text ?? "")";
+            let postString = "LoginID=\(phoneinput)&DateFrom=\(datefrom.text ?? "")&DateTo=\(dateto.text ?? "")&Token=\(postStringencoding ?? "")";
                                    print(postString)
                                  // Set HTTP Request Body
                                  request.httpBody = postString.data(using: String.Encoding.utf8);

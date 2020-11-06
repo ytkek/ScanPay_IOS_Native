@@ -110,13 +110,20 @@ class ScanTopUpQRCode: UIViewController ,UITextFieldDelegate{
     func comfirm_topup_task()
     {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Confirm_Pay.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Confirm_Pay.aspx")
                                                   guard let requestUrl = url2 else { fatalError() }
                                                   // Prepare URL Request Object
                                                   var request = URLRequest(url: requestUrl)
                                                   request.httpMethod = "POST"
+            
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                           
+                           
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                                                   
-        let postString = "LoginID=\(UserPreference.retreiveLoginID())&MerchantID=\(self.merchantid)&MerchantName=\(self.merchant_name_single)&type=\(self.type)&Amount=\(self.qr_amount)&qrcode=\(self.qrcode)&dyqrcode=\(self.lqrcode)";
+        let postString = "LoginID=\(UserPreference.retreiveLoginID())&MerchantID=\(self.merchantid)&MerchantName=\(self.merchant_name_single)&type=\(self.type)&Amount=\(self.qr_amount)&qrcode=\(self.qrcode)&dyqrcode=\(self.lqrcode)&Token=\(postStringencoding ?? "")";
                                                                                              // Set HTTP Request Body
                                                                                              request.httpBody = postString.data(using: String.Encoding.utf8);
               
@@ -275,16 +282,25 @@ class ScanTopUpQRCode: UIViewController ,UITextFieldDelegate{
     
     @IBAction func getnewotp(_ sender: UIButton) {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Send_OTP.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Send_OTP.aspx")
         guard let requestUrl = url2 else { fatalError() }
         // Prepare URL Request Object
         var request = URLRequest(url: requestUrl)
         request.httpMethod = "POST"
+            
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                         
+                         
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+            
         mobile_id.text = UserPreference.retreiveLoginID().masked(4,reversed: true)
          // mobile_id.text = UserPreference.retreiveLoginID()
           let phoneinput = UserPreference.retreiveLoginID()
         // HTTP Request Parameters which will be sent in HTTP Request Body
-          let postString = "LoginID=\(phoneinput)";
+          let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
         // Set HTTP Request Body
         request.httpBody = postString.data(using: String.Encoding.utf8);
         // Perform HTTP Request
@@ -354,17 +370,22 @@ class ScanTopUpQRCode: UIViewController ,UITextFieldDelegate{
     
     @IBAction func confirm_saveotp(_ sender: UIButton) {
         if Reachability.isConnectedToNetwork(){
-       let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Save_OTP.aspx")
+       let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Save_OTP.aspx")
                                             guard let requestUrl = url2 else { fatalError() }
                                             // Prepare URL Request Object
                                             var request = URLRequest(url: requestUrl)
                                             request.httpMethod = "POST"
                                             
-                                           
-                                              let phoneinput = UserPreference.retreiveLoginID()
+                        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                                                       
+                        let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+                        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+                                let phoneinput = UserPreference.retreiveLoginID()
                                             let otpinput = change_otp.text
         if let myString = otpinput {
-                                             let postString = "LoginID=\(phoneinput)&OTP=\(myString)";
+                                             let postString = "LoginID=\(phoneinput)&OTP=\(myString)&Token=\(postStringencoding ?? "")";
                                                                                        // Set HTTP Request Body
                                                                                        request.httpBody = postString.data(using: String.Encoding.utf8);
         }
@@ -448,16 +469,20 @@ class ScanTopUpQRCode: UIViewController ,UITextFieldDelegate{
     
     @IBAction func resend(_ sender: UIButton) {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Send_OTP.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Send_OTP.aspx")
                                             guard let requestUrl = url2 else { fatalError() }
                                             // Prepare URL Request Object
                                             var request = URLRequest(url: requestUrl)
                                             request.httpMethod = "POST"
                                             
-                                           
+                                           let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                                                        
+                                                          let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+                                let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                                               let phoneinput = UserPreference.retreiveLoginID()
                                             // HTTP Request Parameters which will be sent in HTTP Request Body
-                                              let postString = "LoginID=\(phoneinput)";
+                        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                                             // Set HTTP Request Body
                                             request.httpBody = postString.data(using: String.Encoding.utf8);
                                             // Perform HTTP Request
@@ -586,8 +611,8 @@ extension ScanTopUpQRCode: BarcodeScannerCodeDelegate {
                    validateOTPTask()
                    CreditBalanceTask()
                    
-               for i in 0..<result.count
-               {
+              // for i in 0..<result.count
+               //{
                   
                    if result.count == 3
                    {
@@ -599,7 +624,7 @@ extension ScanTopUpQRCode: BarcodeScannerCodeDelegate {
                        
                    }
                   
-               }
+             //  }
         }
         
     }
@@ -626,16 +651,23 @@ extension ScanTopUpQRCode: BarcodeScannerCodeDelegate {
         public  func validateOTPTask()
           {
             if Reachability.isConnectedToNetwork(){
-              let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_Validate_OTP.aspx")
+              let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Validate_OTP.aspx")
                           guard let requestUrl = url2 else { fatalError() }
                           // Prepare URL Request Object
                           var request = URLRequest(url: requestUrl)
                           request.httpMethod = "POST"
+                
+                let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                
+                
+                let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                
+                  let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                            let currentotp = retreivelocalOTP()
                          
                             let phoneinput = UserPreference.retreiveLoginID()
                           // HTTP Request Parameters which will be sent in HTTP Request Body
-                            let postString = "LoginID=\(phoneinput)";
+        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                           // Set HTTP Request Body
                           request.httpBody = postString.data(using: String.Encoding.utf8);
                           // Perform HTTP Request
@@ -697,16 +729,23 @@ extension ScanTopUpQRCode: BarcodeScannerCodeDelegate {
     func CreditBalanceTask()
     {
         if Reachability.isConnectedToNetwork(){
-         let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostPay_CreditBalance.aspx")
+         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_CreditBalance.aspx")
                               guard let requestUrl = url2 else { fatalError() }
                               // Prepare URL Request Object
                               var request = URLRequest(url: requestUrl)
                               request.httpMethod = "POST"
-                              
-                             
+            
+                              let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                                             
+                                             
+                            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                            
+                            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
+            
                                 let phoneinput = UserPreference.retreiveLoginID()
                               // HTTP Request Parameters which will be sent in HTTP Request Body
-                                let postString = "LoginID=\(phoneinput)";
+                                let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                               // Set HTTP Request Body
                               request.httpBody = postString.data(using: String.Encoding.utf8);
                               // Perform HTTP Request
@@ -764,13 +803,20 @@ extension ScanTopUpQRCode: BarcodeScannerCodeDelegate {
     func MerchantInfo_Task_Topup(type:String,merchantid:String,qr_amount:String,lqrcode:String,qrcode:String)
     {
          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostTopUp_MerchantInfo.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostTopUp_MerchantInfo.aspx")
                                                   guard let requestUrl = url2 else { fatalError() }
                                                   // Prepare URL Request Object
                                                   var request = URLRequest(url: requestUrl)
                                                   request.httpMethod = "POST"
+            
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                          
+                          
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                                                   
-        let postString = "type=\(self.type)&merchantid=\(self.merchantid)&amount=\(self.qr_amount)&dynamicqrcode=\(self.lqrcode)&qrcode=\(self.qrcode)";
+        let postString = "type=\(self.type)&merchantid=\(self.merchantid)&amount=\(self.qr_amount)&dynamicqrcode=\(self.lqrcode)&qrcode=\(self.qrcode)&Token=\(postStringencoding ?? "")";
                                                                                              // Set HTTP Request Body
                                                                                              request.httpBody = postString.data(using: String.Encoding.utf8);
               

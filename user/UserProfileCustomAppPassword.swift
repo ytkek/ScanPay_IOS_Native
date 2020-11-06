@@ -33,16 +33,24 @@ class UserProfileCustomAppPassword: UIViewController,UITextFieldDelegate {
     func getoldpassword()
     {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostUserProfile_OldPassword.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_OldPassword.aspx")
                       guard let requestUrl = url2 else { fatalError() }
                       // Prepare URL Request Object
                       var request = URLRequest(url: requestUrl)
                       request.httpMethod = "POST"
+            
+             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+                              
+            
                        
                         let phoneinput = UserPreference.retreiveLoginID()
                        
                   
-                             let postString = "LoginID=\(phoneinput)";
+                             let postString = "Token=\(postStringencoding ?? "")&LoginID=\(phoneinput)";
                        
                        // HTTP Request Parameters which will be sent in HTTP Request Body
                      
@@ -98,17 +106,24 @@ class UserProfileCustomAppPassword: UIViewController,UITextFieldDelegate {
     func savepassword()
     {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostUserProfile_NewPassword.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_NewPassword.aspx")
                       guard let requestUrl = url2 else { fatalError() }
                       // Prepare URL Request Object
                       var request = URLRequest(url: requestUrl)
                       request.httpMethod = "POST"
+            
+            
+                      let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            
+              let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
                        
                         let phoneinput = UserPreference.retreiveLoginID()
                        
                let newpasswordstring = newpassword.text
                         if let myString = newpasswordstring {
-                           let postString = "LoginID=\(phoneinput)&NewPassword=\(myString)";
+                           let postString = "LoginID=\(phoneinput)&NewPassword=\(myString)&Token=\(postStringencoding ?? "")";
                                  
                                  // HTTP Request Parameters which will be sent in HTTP Request Body
                                
@@ -135,6 +150,10 @@ class UserProfileCustomAppPassword: UIViewController,UITextFieldDelegate {
                                if dataString == "SAVE PROFILE PASSWORD SUCCESS"
                                {
                                    DispatchQueue.main.async {
+                                    
+                                    UserPreference.removeLoginPassword()
+                                    UserPreference.saveLoginPassword(loginpassword: self.newpassword.text ?? "")
+                                   
                                       let alert = UIAlertController(title: "Alert", message: "Your Password have been changed", preferredStyle: UIAlertControllerStyle.alert)
                                                                                           alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
                                                                                                                                      

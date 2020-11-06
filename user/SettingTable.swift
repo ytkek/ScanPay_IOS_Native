@@ -21,16 +21,27 @@ class SettingTable: UITableViewController {
     }
     
     @IBAction func logout(_ sender: UIButton) {
-        let url = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostLogout_Update_Status.aspx")
+        let url = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostLogout_Update_Status.aspx")
         guard let requestUrl = url else { fatalError() }
         // Prepare URL Request Object
         var request = URLRequest(url: requestUrl)
         request.httpMethod = "POST"
+        
+        let value =  "s7OyGTP6ZZmL7t3zll"
+                      
+                      
+                      let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                         
+                                 // Set HTTP Request Body
+                                 // Perform HTTP Request
+                      
+                      let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        
          
         let phoneinput = UserPreference.retreiveLoginID()
          
         // HTTP Request Parameters which will be sent in HTTP Request Body
-          let postString = "LoginID=\(phoneinput)";
+        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
           print(postString)
         // Set HTTP Request Body
         request.httpBody = postString.data(using: String.Encoding.utf8);

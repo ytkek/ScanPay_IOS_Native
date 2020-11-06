@@ -9,6 +9,7 @@
 import UIKit
 import DropDown
 import SDWebImage
+import CryptoSwift
 
 class DiscoveryCell: UITableViewCell, UITableViewDelegate, UITableViewDataSource {
 
@@ -289,12 +290,14 @@ class DiscoveryCell: UITableViewCell, UITableViewDelegate, UITableViewDataSource
                          self.indicator = true
                         self.reloadalldatapage()
                        //self.tableview.reloadData()
-                      
+                       
+                       
                        }
     }
     
    override func layoutSubviews() {
         super.layoutSubviews()
+    
     
     
     tableview.delegate = self
@@ -338,6 +341,7 @@ class DiscoveryCell: UITableViewCell, UITableViewDelegate, UITableViewDataSource
                      self.exampleothers = 0
                     self.indicator = false
                     self.reloadalldatapage()
+                    
                 }
            }
             	
@@ -348,16 +352,28 @@ class DiscoveryCell: UITableViewCell, UITableViewDelegate, UITableViewDataSource
      public  func reloadalldatapage()
            {
              if Reachability.isConnectedToNetwork(){
-               let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetAllDiscoveryList.aspx")
+               let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetAllDiscoveryList.aspx")
                            guard let requestUrl = url2 else { fatalError() }
                            // Prepare URL Request Object
                            var request = URLRequest(url: requestUrl)
-                           request.httpMethod = "GET"
+                           request.httpMethod = "POST"
                             
-                    
+                    let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                
+                
+                let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                   
                            // Set HTTP Request Body
-                           //request.httpBody = postString.data(using: String.Encoding.utf8);
                            // Perform HTTP Request
+                
+                let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+                            let postString = "Token=\(postStringencoding ?? "")";
+                            print(postString)
+               
+                // Set HTTP Request Body
+                            request.httpBody = postString.data(using: String.Encoding.utf8);
+
+               
                            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
                                    
                                    // Check for Error
@@ -370,7 +386,7 @@ class DiscoveryCell: UITableViewCell, UITableViewDelegate, UITableViewDataSource
                             if let data = data {
                                     do {
                                           
-                                         
+                                       
                                         let res = try JSONDecoder().decode(DiscoveryInformation.self, from: data)
                                         print(res)
                                         self.DiscoveryList = res.datarecords
@@ -451,8 +467,57 @@ class DiscoveryCell: UITableViewCell, UITableViewDelegate, UITableViewDataSource
 
         // Configure the view for the selected state
     }
+    
+    static func aesEncrypt(text: String , key: String ) -> String{
+       let cleartext = text
+      //let byteText = cleartext.data(using: String.Encoding.utf8)?.bytes
+     let byteText:[UInt8] = Array(cleartext.utf8)
+     let keyBytes = [UInt8](repeating: 0, count:16)
+    // let byteKey :[UInt8] = [UInt8](key.data(using:String.Encoding.utf8)!.bytes)
+     let byteKey:[UInt8] = Array(key.utf8)
+     //let iv = key.data(using:String.Encoding.utf8)!.bytes
+     
+     var len = byteKey.count
+
+     if (len > keyBytes.count)
+     {
+     len = keyBytes.count
+     }
+
+    // let bytekeyarray = Array(byteKey[0 ..< 0+len])
+     let slice = byteKey[0 ..< 0+len]
+     let bytekeyarray = Array(slice)
+     do {
+         let aes = try AES(key: bytekeyarray, blockMode: CBC(iv:bytekeyarray), padding: .pkcs7)
+         let encrypted : [UInt8] = try aes.encrypt(byteText)
+         let data = NSData(bytes: encrypted,length: encrypted.count)
+         //let encData  = Data(bytes: encrypted,count: Int(encrypted.count))
+         
+         let base64String : String = data.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue:0))
+         return "\(base64String)"
+        // print("\(base64String)")
+     }
+     catch
+     {
+         return ""
+     }
+    
+     }
    
 }
+
+extension String{
+    
+   
+
+    
+    func Base64toUTF8() -> String {
+        let data = NSData.init(base64Encoded: self, options: []) ?? NSData()
+        return String(data: data as Data ,encoding: String.Encoding.utf8) ?? ""
+    }
+    
+}
+
 
 struct DiscoveryInformation: Codable {
     var datarecords: [discoveryrecords]

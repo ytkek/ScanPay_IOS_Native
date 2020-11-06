@@ -243,15 +243,23 @@ class SignUpStep3: UIViewController,UITextFieldDelegate {
     func Update_MemberList()
     {
           if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostSignUp_Update_MemberList.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Update_MemberList.aspx")
                                     guard let requestUrl = url2 else { fatalError() }
                                     // Prepare URL Request Object
                                     var request = URLRequest(url: requestUrl)
                                     request.httpMethod = "POST"
+            
+            let value =  "s7OyGTP6ZZmL7t3z"
+                                        
+                                        
+                         let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                         
+                         let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+                      
         
           let phoneinput = global.loginid
                                     // HTTP Request Parameters which will be sent in HTTP Request Body
-          let postString = "LoginID=\(phoneinput ?? "")&Otp=\(global.otp ?? "")";
+          let postString = "LoginID=\(phoneinput ?? "")&Otp=\(global.otp ?? "")&Token=\(postStringencoding ?? "")";
                                       print(postString)
                                     // Set HTTP Request Body
                                     request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -317,15 +325,21 @@ class SignUpStep3: UIViewController,UITextFieldDelegate {
     func Update_Confirm()
     {
           if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostSignUp_Update_Confirm.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Update_Confirm.aspx")
                                   guard let requestUrl = url2 else { fatalError() }
                                   // Prepare URL Request Object
                                   var request = URLRequest(url: requestUrl)
                                   request.httpMethod = "POST"
-      
+        let value =  "s7OyGTP6ZZmL7t3z"
+                                           
+                                           
+        let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                            
+        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
         let phoneinput = global.loginid
                                   // HTTP Request Parameters which will be sent in HTTP Request Body
-        let postString = "LoginID=\(phoneinput ?? "")&Otp=\(global.otp ?? "")";
+        let postString = "LoginID=\(phoneinput ?? "")&Otp=\(global.otp ?? "")&Token=\(postStringencoding ?? "")";
                                     print(postString)
                                   // Set HTTP Request Body
                                   request.httpBody = postString.data(using: String.Encoding.utf8);
@@ -388,15 +402,24 @@ class SignUpStep3: UIViewController,UITextFieldDelegate {
     func Update_User_Payment()
     {
         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostSignUp_Update_Payment_Info.aspx")
+        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Update_Payment_Info.aspx")
                                   guard let requestUrl = url2 else { fatalError() }
                                   // Prepare URL Request Object
                                   var request = URLRequest(url: requestUrl)
                                   request.httpMethod = "POST"
+            
+            
+            let value =  "s7OyGTP6ZZmL7t3z"
+                                                     
+                                                     
+                  let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+                                      
+                  let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            
         let paymentpin = "\(otp1.text ?? "")\(otp2.text ?? "")\(otp3.text ?? "")\(otp4.text ?? "")\(otp5.text ?? "")\(otp6.text ?? "")"
         let phoneinput = global.loginid
                                   // HTTP Request Parameters which will be sent in HTTP Request Body
-        let postString = "PaymentPin=\(paymentpin ?? "")&LoginID=\(phoneinput ?? "")&Otp=\(global.otp ?? "")";
+        let postString = "PaymentPin=\(paymentpin ?? "")&LoginID=\(phoneinput ?? "")&Otp=\(global.otp ?? "")&Token=\(postStringencoding ?? "")";
                                     print(postString)
                                   // Set HTTP Request Body
                                   request.httpBody = postString.data(using: String.Encoding.utf8);
