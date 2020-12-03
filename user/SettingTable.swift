@@ -27,7 +27,7 @@ class SettingTable: UITableViewController {
         var request = URLRequest(url: requestUrl)
         request.httpMethod = "POST"
         
-        let value =  "s7OyGTP6ZZmL7t3zll"
+        let value =  "s7OyGTP6ZZmL7t3z"
                       
                       
                       let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")

@@ -159,6 +159,10 @@ class ScanTopUpQRCode: UIViewController ,UITextFieldDelegate{
                                                     self.topup_success_merchant.text = self.merchant_name_single
                                                         
                                                 }
+                                                else
+                                                 {
+                                                    self.app_error_message_log(error_message:"unsuccess topup \(self.qrcode)\(self.lqrcode)" )
+                                                }
                                                         
                                                 }
             }
@@ -407,6 +411,7 @@ class ScanTopUpQRCode: UIViewController ,UITextFieldDelegate{
                                         {
                                             if result == "SAVE OTP BACKEND SYSTEM SUCCESS"
                                             {
+                                                self.app_success_message_log(success_message: "Topup key save successful")
                                                 print("SAVE OTP SUCCESSFULLY")
                                                 let otpinput = self.change_otp.text
                                 if let myString = otpinput {
@@ -415,6 +420,10 @@ class ScanTopUpQRCode: UIViewController ,UITextFieldDelegate{
                                                 
                                                 self.topup.isHidden = false
                                       
+                                            }
+                                            else
+                                            {
+                                                self.app_error_message_log(error_message: "Topup key save unsucessful")
                                             }
                                         }
                                     }
@@ -849,6 +858,7 @@ extension ScanTopUpQRCode: BarcodeScannerCodeDelegate {
                                                     switch action.style{
                                                      
                                                     case .default :
+                                                        self.dismiss(animated: true, completion: nil)
                                                         self.app_error_message_log(error_message: "unsuccess topup Error #A0041 Invalid Merchant")
                                                         break
                                                         

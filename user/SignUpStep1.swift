@@ -606,7 +606,7 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         }
         else
         {
-            let alert = UIAlertController(title: "Error #A0005", message: "At least 4 char and Alphanumeric" , preferredStyle : .alert)
+            let alert = UIAlertController(title: "", message: "At least 4 char and Alphanumeric" , preferredStyle : .alert)
             alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
                 switch action.style{
                  

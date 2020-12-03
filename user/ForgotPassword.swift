@@ -141,7 +141,7 @@ class ForgotPassword: UIViewController,UITextFieldDelegate {
             }
             else
             {
-                let alert = UIAlertController(title: "Error #A0012", message: "Invalid Email" , preferredStyle : .alert)
+                let alert = UIAlertController(title: "", message: "Invalid Email" , preferredStyle : .alert)
                 alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
                     switch action.style{
                      

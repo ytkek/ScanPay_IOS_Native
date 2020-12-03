@@ -87,7 +87,7 @@ class ResetStatus: UIViewController,UITextFieldDelegate {
     @IBAction func sendotp_btn(_ sender: UIButton) {
         if loginid.text == "" || email.text == ""
         {
-            let alert = UIAlertController(title: "Error #A0051", message: "Loginid and email cant be empty" , preferredStyle : .alert)
+            let alert = UIAlertController(title: "", message: "Loginid and email cant be empty" , preferredStyle : .alert)
             alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
                 switch action.style{
                  
@@ -256,7 +256,7 @@ class ResetStatus: UIViewController,UITextFieldDelegate {
                      let emailinput =  (email.text)!
                     
                    // HTTP Request Parameters which will be sent in HTTP Request Body
-                     let postString = "Email=\(emailinput)";
+                     let postString = "Email=\(emailinput)&Token=\(postStringencoding ?? "")";
                      print(postString)
                    // Set HTTP Request Body
                    request.httpBody = postString.data(using: String.Encoding.utf8);

@@ -70,6 +70,7 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
     var dailyexp = ""
     var creditbalance = ""
     var qramount = ""
+    var qrcodeexpired = false
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -151,9 +152,22 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
         }
         else
         {
-            self.qramount = self.amount.text ?? ""
-           // validate_pinnumber()
-            duplicate_transaction_task()
+            if qrcodeexpired == false
+            {
+                self.qramount = self.amount.text ?? ""
+                       // validate_pinnumber()
+                        duplicate_transaction_task()
+            }
+            else if qrcodeexpired == true
+            {
+                QRValidTask()
+                self.qramount = self.amount.text ?? ""
+                       // validate_pinnumber()
+                        duplicate_transaction_task()
+                
+            }
+                
+        
         }
         
     }
@@ -195,10 +209,10 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
                     {
                         if result == "Transaction Duplicate Found"
                         {
-                            let alert = UIAlertController(title: "Same merchant and amount detected, Are you sure to continue?", message: "" , preferredStyle : .alert)
+                            let alert = UIAlertController(title: "#A1100 Same merchant and amount detected, Are you sure to continue?", message: "" , preferredStyle : .alert)
                             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
                                 alert.dismiss(animated:true, completion: nil)
-                                                                                       
+                                self.app_success_message_log(success_message: "Transaction Duplicate Accepted")
                                self.validate_pinnumber()
                                 }))
 
@@ -207,6 +221,7 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
                                 self.dismiss(animated: true, completion: nil)
                                 }))
                                 self.present(alert,animated: true, completion: nil)
+                            self.app_error_message_log(error_message: "Transaction Duplicate Cancel")
                         }
                         else if result == "Transaction Duplicate Not Found"
                         {
@@ -258,9 +273,11 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
                                                               // Convert HTTP Response Data to a String
                                                               if let data = data, let dataString = String(data: data, encoding: .utf8) {
                                                               print("Response data string:\n \(dataString)")
-                                                              
+                                                              let result = dataString
                                                           DispatchQueue.main.async()
                                                         {
+                                                            if result == "payment success"
+                                                            {
                                                            self.app_success_message_log(success_message: "success payment \(self.lqrcode ?? "")\(self.qrcode ?? "")")
                                                            self.payment_success.isHidden = false
                                                            self.payment_success_amount.text = "Amount:  \(self.amount.text ?? "")"
@@ -272,6 +289,11 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
                                                            
                                                            self.payment_success_date.text = result
                                                            self.payment_success_merchant.text = self.merchant_name_single
+                                                            }
+                                                            else
+                                                            {
+                                                                self.app_error_message_log(error_message: "unsuccess payment \(self.lqrcode ?? "")\(self.qrcode ?? "")")
+                                                            }
                                                         }
                 }
             }
@@ -443,6 +465,7 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
                                                                                                                switch action.style{
                                                                                                                 
                                                                                                                case .default :
+                                                                 self.dismiss(animated: true, completion: nil)
                                                                                                                 self.app_error_message_log(error_message: "unsuccessful payment Error #A0035 Not Enough Credit");                                       break
                                                                                                                    
                                                                                                                case .cancel : break
@@ -460,6 +483,7 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
                                                             switch action.style{
                                                              
                                                             case .default :
+                                                                self.dismiss(animated: true, completion: nil)
                                                                  self.app_error_message_log(error_message: "unsuccessful payment Error #A0036 Not allow to exceed daily limit")
                                                                 
                                                                 break
@@ -479,6 +503,7 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
                                                             switch action.style{
                                                              
                                                             case .default :
+                                                                self.dismiss(animated: true, completion: nil)
                                                                  self.app_error_message_log(error_message: "unsuccessful payment  Error #A0037 Not allow to exceed purse limit")
                                                                 break
                                                                 
@@ -497,6 +522,7 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
                                                             switch action.style{
                                                              
                                                             case .default :
+                                                                self.dismiss(animated: true, completion: nil)
                                                                 self.app_error_message_log(error_message: "unsuccessful payment Error #A0038 Not allow to exceed monthly limit")
                                                                 
                                                                 
@@ -556,6 +582,7 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
                                                         switch action.style{
                                                          
                                                         case .default :
+                                                            self.dismiss(animated: true, completion: nil)
                                                              self.app_error_message_log(error_message: "unsuccessful payment Error #A0031 Invalid Pin Number")
                                                             
                                                             break
@@ -852,6 +879,27 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
                                                 self.payment.isHidden = false
                                       
                                             }
+                                            else
+                                            {
+                                                
+                                                let alert = UIAlertController(title: "Error #A1101", message: "Error Save Otp Backend System Fail" , preferredStyle : .alert)
+                                                                                                   alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                                                                                                       switch action.style{
+                                                                                                        
+                                                                                                       case .default :
+                                                                                                           self.dismiss(animated: true, completion: nil)
+                                                                                                             self.app_error_message_log(error_message: "Payment key save unsuccessful")
+                                                                                                           
+                                                                                                           break
+                                                                                                           
+                                                                                                       case .cancel : break
+                                                                                                           
+                                                                                                       case .destructive : break
+                                                                                                       
+                                                                                                       }}))
+                                                                                                   self.present(alert,animated: true, completion: nil)
+                                               
+                                            }
                                         }
                                     }
                                 }
@@ -1123,6 +1171,7 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
                 qr_amount = result[1]
                 lqrcode = result[2]
                 MerchantInfo_Task_Pay(type: self.type, merchantid: merchantid, qr_amount: qr_amount, lqrcode: lqrcode,qrcode:qrcode)
+                qrcodeexpired = true
                 
             }
             else if result.count == 2
@@ -1150,6 +1199,87 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
         controller.dismiss(animated: true, completion: nil)
     }
     }
+    public  func QRValidTask()
+       {
+         if Reachability.isConnectedToNetwork(){
+           let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Validate_QRExpired.aspx")
+                       guard let requestUrl = url2 else { fatalError() }
+                       // Prepare URL Request Object
+                       var request = URLRequest(url: requestUrl)
+                       request.httpMethod = "POST"
+            
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+                          
+                          
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+                        let currentotp = retreivelocalOTP()
+                      
+                         let phoneinput = UserPreference.retreiveLoginID()
+                       // HTTP Request Parameters which will be sent in HTTP Request Body
+            let postString = "Token=\(postStringencoding ?? "")&lqr_qrcode=\(self.lqrcode ?? "")";
+                       // Set HTTP Request Body
+                       request.httpBody = postString.data(using: String.Encoding.utf8);
+                       // Perform HTTP Request
+                       let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                               
+                               // Check for Error
+                               if let error = error {
+                                   print("Error took place \(error)")
+                                   return
+                               }
+                        
+                               // Convert HTTP Response Data to a String
+                               if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                               print("Response data string:\n \(dataString)")
+                                let result = dataString
+                                DispatchQueue.main.async() {
+                                                                    if result == "Invalid qr code"
+                                                                    {
+                                                                        
+                                                                        let alert = UIAlertController(title: "Error #A0081", message: "QR Code Had Expired" , preferredStyle : .alert)
+                                                                                                                                      alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                                                                                                                                          switch action.style{
+                                                                                                                                              case .default :
+                                                                               
+                                                                self.dismiss(animated: true, completion: nil)
+                                                                                                                                                            
+                                                                                                                    break
+                                                                                                                                                case .cancel : break
+                                                                                                                        case .destructive : break
+
+                                                                                                                                                }}))
+                                                                                                                                                self.present(alert,animated: true, completion: nil)
+                                                                        self.app_error_message_log(error_message: "unsuccessful payment Error #A0081 QR Code Had Expired")
+                                                                    }
+                                                                   
+                                                                         
+                                }
+                                 
+                                 
+                               }
+                       }
+                       task.resume()
+        }
+        else
+         {
+            let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
+                alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style{
+                                                                                                                                
+            case .default : break
+                                                                                                                                   
+            case .cancel : break
+                                                                                                                                   
+            case .destructive : break
+                                                                                                                               
+            }}))
+            self.present(alert,animated: true, completion: nil)
+        }
+                         
+       }
+    
     func CheckDailyLimit()
     {
         if Reachability.isConnectedToNetwork(){
@@ -1200,7 +1330,7 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
                                                                     switch action.style{
                                                                                                                
                                                                         case .default :
-                                                                        
+                                                                       self.dismiss(animated: true, completion: nil)
                                                                         self.app_error_message_log(error_message: "unsuccessful payment Error #A0032 Exceed Daily Limit")
                                                                         
                                                                         break
@@ -1417,6 +1547,7 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
                                                        switch action.style{
                                                                                                    
                                                          case .default :
+                                                            self.dismiss(animated: true, completion: nil)
                                                         self.app_error_message_log(error_message: "unsuccessful payment Error #A0033 Not Enough Balance")
                                                         
                                                         break
@@ -1510,7 +1641,7 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
                                                                                                       switch action.style{
                                                                                                        
                                                                                                       case .default :
-                                                                                                        
+                                                                                                self.dismiss(animated: true, completion: nil)
                                                                                                         self.app_error_message_log(error_message: "unsuccessful payment Error #A0034 Invalid Merchant")
                                                                         break
                                                                                                           

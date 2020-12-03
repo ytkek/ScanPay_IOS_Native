@@ -356,7 +356,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
                       else if dataString == "Not Allow Login"
                       {
                            DispatchQueue.main.async {
-                           let alert = UIAlertController(title: "Alert", message: "Your Account have been login by another device", preferredStyle: UIAlertControllerStyle.alert)
+                           let alert = UIAlertController(title: "Error #A1000", message: "Error Account have been login by another device", preferredStyle: UIAlertControllerStyle.alert)
                           alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                           self.present(alert, animated: true, completion: nil)
                           }

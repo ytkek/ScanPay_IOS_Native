@@ -56,7 +56,7 @@ class UserProfileCustomGender: UIViewController ,UITextFieldDelegate{
                               let phoneinput = UserPreference.retreiveLoginID()
                               let Gender = self.gendertype ?? ""
                              
-                                   let postString = "LoginID=\(phoneinput)&Gender=\(Gender)&Token=\(postStringencoding)";
+                                   let postString = "LoginID=\(phoneinput)&Gender=\(Gender)&Token=\(postStringencoding ?? "")";
                              
                              // HTTP Request Parameters which will be sent in HTTP Request Body
                            
