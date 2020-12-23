@@ -23,6 +23,42 @@ class SignUpStep3: UIViewController,UITextFieldDelegate {
     var checkbox_indicator = false;
     
     @IBOutlet weak var finish_btn: UIButton!
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+          super.viewWillAppear(true)
+          DispatchQueue.main.async {
+             if UIDevice.current.hasTopNotch
+             {
+              let screensize: CGRect = UIScreen.main.bounds
+              let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
+               myView.backgroundColor = .white
+                                                                                  
+               self.view.addSubview(myView)
+                                                                                  
+              if #available(iOS 13.0, *)
+                             {
+                                 let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                                 statusBar.backgroundColor = .white
+                                 UIApplication.shared.keyWindow?.addSubview(statusBar)
+                             }
+                             else
+                             {
+                                 UIApplication.shared.statusBarView?.backgroundColor = .white
+                             }
+              self.view.frame.origin.y = 30
+                                               
+              }
+              else
+             {
+                 UIApplication.shared.statusBarView?.backgroundColor = .white
+                  self.view.frame.origin.y = 0
+                                                  
+                                                  
+             }
+          }
+         
+      }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -43,8 +79,11 @@ class SignUpStep3: UIViewController,UITextFieldDelegate {
         finish_btn.isEnabled = false
         finish_btn.alpha = 0.5
         
+        
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
               self.view.addGestureRecognizer(tapGesture)
+       
     }
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer)
        {
@@ -55,6 +94,8 @@ class SignUpStep3: UIViewController,UITextFieldDelegate {
            otp4.resignFirstResponder()
            otp5.resignFirstResponder()
            otp6.resignFirstResponder()
+        
+       
         
            
        }
@@ -91,6 +132,7 @@ class SignUpStep3: UIViewController,UITextFieldDelegate {
         otp4.resignFirstResponder()
         otp5.resignFirstResponder()
         otp6.resignFirstResponder()
+      
     }
     
     @IBAction func check_box_click(_ sender: UIButton) {
@@ -564,7 +606,9 @@ class SignUpStep3: UIViewController,UITextFieldDelegate {
       func textFieldShouldReturn(_ textField: UITextField) -> Bool {
           self.view.endEditing(true)
           return false
-      }    /*
+      }
+ 
+    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation

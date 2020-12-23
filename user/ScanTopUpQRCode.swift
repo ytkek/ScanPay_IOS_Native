@@ -55,6 +55,39 @@ class ScanTopUpQRCode: UIViewController ,UITextFieldDelegate{
        var qr_amount = ""
        var lqrcode = ""
        var qrcode = ""
+    
+    override func viewWillAppear(_ animated: Bool) {
+           super.viewWillAppear(true)
+           DispatchQueue.main.async {
+              if UIDevice.current.hasTopNotch
+              {
+            let screensize: CGRect = UIScreen.main.bounds
+            let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
+             myView.backgroundColor = .white
+             self.view.addSubview(myView)
+             if #available(iOS 13.0, *)
+                            {
+                                let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                                statusBar.backgroundColor = .white
+                                UIApplication.shared.keyWindow?.addSubview(statusBar)
+                            }
+                            else
+                            {
+                                UIApplication.shared.statusBarView?.backgroundColor = .white
+                            }
+               self.view.frame.origin.y = 30
+                                                
+               }
+               else
+              {
+                UIApplication.shared.statusBarView?.backgroundColor = .white
+                   self.view.frame.origin.y = 0
+                                                   
+                                                   
+              }
+           }
+          
+       }
     override func viewDidLoad() {
         super.viewDidLoad()
         

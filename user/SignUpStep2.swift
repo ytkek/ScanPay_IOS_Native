@@ -13,6 +13,44 @@ class SignUpStep2: UIViewController {
     @IBOutlet weak var name_input: UITextField!
     @IBOutlet weak var email_input: UITextField!
     @IBOutlet weak var nextpage: UIButton!
+    
+    override func viewWillAppear(_ animated: Bool) {
+          super.viewWillAppear(true)
+          DispatchQueue.main.async {
+             if UIDevice.current.hasTopNotch
+             {
+             let screensize: CGRect = UIScreen.main.bounds
+              let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
+               myView.backgroundColor = .white
+               self.view.addSubview(myView)
+              
+                if #available(iOS 13.0, *)
+                               {
+                                   let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                                   statusBar.backgroundColor = .white
+                                   UIApplication.shared.keyWindow?.addSubview(statusBar)
+                               }
+                               else
+                               {
+                                   UIApplication.shared.statusBarView?.backgroundColor = .white
+                               }
+                
+                
+                
+                
+              self.view.frame.origin.y = 30
+                                               
+              }
+              else
+             {
+                 UIApplication.shared.statusBarView?.backgroundColor = .white
+                  self.view.frame.origin.y = 0
+                                                  
+                                                  
+             }
+          }
+         
+      }
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -22,16 +60,20 @@ class SignUpStep2: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
                self.view.addGestureRecognizer(tapGesture)
         
-        
+         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         // Do any additional setup after loading the view.
+        
+      
     }
     
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer)
        {
         name_input.resignFirstResponder()
         email_input.resignFirstResponder()
+        
+    
        }
     @IBAction func name(_ sender: UITextField) {
         checkinformation()
@@ -52,11 +94,14 @@ class SignUpStep2: UIViewController {
     
     @IBAction func name_return(_ sender: UITextField) {
         sender.resignFirstResponder()
+        
+     
     }
     
     
     @IBAction func email_return(_ sender: UITextField) {
         sender.resignFirstResponder()
+       
     }
     @IBAction func back(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
@@ -185,18 +230,42 @@ class SignUpStep2: UIViewController {
         }
         
     }
+  
     @objc func keyboardWillShow(notification: NSNotification) {
            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-               if self.view.frame.origin.y == 0 {
-                   self.view.frame.origin.y -= 100
-               }
+                if UIDevice.current.hasTopNotch
+                            {
+                                                                
+                                if self.view.frame.origin.y == 30
+                                    {
+                                                                                self.view.frame.origin.y -= 130
+                                                                                }
+                                                         }
+                                                         else
+                                                           {
+                                                            if self.view.frame.origin.y == 0
+                                                                               {
+                                                                                       self.view.frame.origin.y -= 100
+                                                                               }
+                                                         }
            }
        }
 
        @objc func keyboardWillHide(notification: NSNotification) {
-           if self.view.frame.origin.y != 0 {
-               self.view.frame.origin.y = 0
-           }
+           if UIDevice.current.hasTopNotch
+                                           {
+                                               if self.view.frame.origin.y != 0 {
+                                                                     self.view.frame.origin.y = 30
+                                                                 }
+                                         
+                                           }
+                                           else
+                                           {
+                                               if self.view.frame.origin.y != 0 {
+                                                         self.view.frame.origin.y = 0
+                                                     }
+                                               
+                                           }
        }
     private func checkinformation()
     {

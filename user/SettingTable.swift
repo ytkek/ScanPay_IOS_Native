@@ -120,6 +120,7 @@ class SettingTable: UITableViewController {
            
                 cellHeight = UIScreen.main.bounds.height
           
+                
             return cellHeight
         }
         

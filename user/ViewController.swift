@@ -20,8 +20,53 @@ class ViewController: UIViewController ,UITextFieldDelegate{
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var forgotpassword: UILabel!
     @IBOutlet weak var resetlogin_btn: UILabel!
+    
+    
+ override func viewWillAppear(_ animated: Bool) {
+         super.viewWillAppear(true)
+         DispatchQueue.main.async {
+            if UIDevice.current.hasTopNotch
+            {
+                let screensize: CGRect = UIScreen.main.bounds
+                let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
+                myView.backgroundColor = .white
+                
+                self.view.addSubview(myView)
+                if #available(iOS 13.0, *)
+                {
+                    let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                    statusBar.backgroundColor = .white
+                    UIApplication.shared.keyWindow?.addSubview(statusBar)
+                }
+                else
+                {
+                    UIApplication.shared.statusBarView?.backgroundColor = .white
+                }
+             self.view.frame.origin.y = 30
+                                              
+             }
+             else
+            {
+
+                 UIApplication.shared.statusBarView?.backgroundColor = .white
+                 self.view.frame.origin.y = 0
+                                                 
+                                                 
+            }
+         }
+        
+     }
+   
+    
+        
+      
+
+        
+       
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+      
         // Do any additional setup after loading the view.
         if ViewController.isJailbroken() == true
         {
@@ -49,7 +94,8 @@ class ViewController: UIViewController ,UITextFieldDelegate{
         {
             GetIOS_IndicatorTask()
           
-                
+           
+           
                 
                 NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
            
@@ -279,6 +325,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
       }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
              self.view.endEditing(true)
+      
              return false
          }
     
@@ -301,6 +348,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
 
        @objc func doneButtonAction(){
            phone_input.resignFirstResponder()
+      
            
        }
     @IBAction func intentmainpage(_ sender: UIButton) {
@@ -402,26 +450,50 @@ class ViewController: UIViewController ,UITextFieldDelegate{
         
     }
     @IBAction func intentsignup(_ sender: UIButton) {
+       
+        
          let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "signupstep1") as! UIViewController
         nextViewController.modalPresentationStyle = .fullScreen
                present(nextViewController,animated:true,completion:nil)
         
     }
     
-   
-    
+  
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= 100
+              if UIDevice.current.hasTopNotch
+              {
+                   
+                if self.view.frame.origin.y == 30
+                                   {
+                                   self.view.frame.origin.y -= 130
+                                   }
+            }
+            else
+              {
+               if self.view.frame.origin.y == 0
+                                  {
+                                          self.view.frame.origin.y -= 100
+                                  }
             }
         }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
+        if UIDevice.current.hasTopNotch
+        {
+            if self.view.frame.origin.y != 0 {
+                                  self.view.frame.origin.y = 30
+                              }
+      
+        }
+        else
+        {
+            if self.view.frame.origin.y != 0 {
+                      self.view.frame.origin.y = 0
+                  }
+            
         }
     }
     static func isJailbroken() -> Bool {
@@ -462,6 +534,20 @@ class ViewController: UIViewController ,UITextFieldDelegate{
         guard file != nil else { return false }
         fclose(file)
         return true
+    }
+}
+
+
+extension Notification.Name{
+    static let TopNotchNotification = Notification.Name("TopNotchNotification")
+}
+
+extension UIApplication{
+    var statusBarView : UIView?{
+        if responds(to: Selector(("statusBar"))){
+            return value(forKey:"statusBar" ) as? UIView
+        }
+        return nil
     }
 }
 

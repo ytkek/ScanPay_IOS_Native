@@ -46,6 +46,42 @@ class FindMerchant: UIViewController , UITableViewDelegate, UITableViewDataSourc
     var examplehaircaresaloon = 0
     var exampleothers = 0
     var indicator = false
+    
+    override func viewWillAppear(_ animated: Bool) {
+               super.viewWillAppear(true)
+               DispatchQueue.main.async {
+                  if UIDevice.current.hasTopNotch
+                  {
+                    let screensize: CGRect = UIScreen.main.bounds
+                    let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
+                    myView.backgroundColor = .white
+                    
+                    self.view.addSubview(myView)
+                    
+                   if #available(iOS 13.0, *)
+                                  {
+                                      let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                                      statusBar.backgroundColor = .white
+                                      UIApplication.shared.keyWindow?.addSubview(statusBar)
+                                  }
+                                  else
+                                  {
+                                      UIApplication.shared.statusBarView?.backgroundColor = .white
+                                  }
+                                                       
+                   self.view.frame.origin.y = 30
+                                                    
+                   }
+                   else
+                  {
+                     UIApplication.shared.statusBarView?.backgroundColor = .white
+                       self.view.frame.origin.y = 0
+                                                       
+                                                       
+                  }
+               }
+              
+           }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        
         if self.selectionint == 0
@@ -677,11 +713,27 @@ class FindMerchant: UIViewController , UITableViewDelegate, UITableViewDataSourc
                                                                                                
                 }
                }
+        
+         NotificationCenter.default.addObserver(self, selector: #selector(TopChangeFrame), name: NSNotification.Name.UIWindowDidBecomeVisible, object: nil)
                     
         
     }
     
 
+    
+    @objc func TopChangeFrame(notification: NSNotification) {
+                 if UIDevice.current.hasTopNotch {
+                                  
+                      self.view.frame.origin.y = 30
+                               
+                                }
+                                  else{
+                                        self.view.frame.origin.y = 0
+                                  
+                                  
+                                  }
+         
+       }
     @IBAction func selection_click(_ sender: UIButton) {
         
          dropDown.show()

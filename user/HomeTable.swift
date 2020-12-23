@@ -13,6 +13,7 @@ class HomeTable: UITableViewController {
     
   
     
+       
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -102,6 +103,7 @@ class HomeTable: UITableViewController {
 
          
               cellHeight = UIScreen.main.bounds.height
+      
         
           return cellHeight
       }
@@ -128,6 +130,7 @@ class HomeTable: UITableViewController {
   extension HomeTable: IndicatorInfoProvider{
          func indicatorInfo(for pagerTabStripController : PagerTabStripViewController) ->
              IndicatorInfo{
+                
                  return IndicatorInfo(image: UIImage(named : "home"))
              }
          

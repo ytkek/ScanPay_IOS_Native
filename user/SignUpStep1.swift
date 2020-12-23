@@ -39,6 +39,42 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
    var timer: Timer?
     var totalTime = 30
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        DispatchQueue.main.async {
+           if UIDevice.current.hasTopNotch
+           {
+         let screensize: CGRect = UIScreen.main.bounds
+         let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
+          myView.backgroundColor = .white
+          self.view.addSubview(myView)
+            
+          if #available(iOS 13.0, *)
+                        {
+                            let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                            statusBar.backgroundColor = .white
+                            UIApplication.shared.keyWindow?.addSubview(statusBar)
+                        }
+                        else
+                        {
+                            UIApplication.shared.statusBarView?.backgroundColor = .white
+                        }
+            
+            
+            self.view.frame.origin.y = 30
+                                             
+            }
+            else
+           {
+             UIApplication.shared.statusBarView?.backgroundColor = .white
+                self.view.frame.origin.y = 0
+                                                
+                                                
+           }
+        }
+       
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -72,12 +108,15 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         //loginpassword_input.delegate = self
        // confirmpassword_input.delegate = self
         
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
         self.view.addGestureRecognizer(tapGesture)
+        
+      
         
     }
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer)
@@ -94,6 +133,8 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         
         confirmpassword_input.resignFirstResponder()
         
+      
+        
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -108,6 +149,8 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
     }
       func textFieldShouldReturn(_ textField: UITextField) -> Bool {
           self.view.endEditing(true)
+        
+       
           return false
       }
     @IBAction func back(_ sender: UIButton) {
@@ -492,11 +535,17 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
     
     @IBAction func loginpass_done(_ sender: UITextField) {
         sender.resignFirstResponder()
+      
         
     }
     
     @IBAction func confirmpass_done(_ sender: UITextField) {
-        sender.resignFirstResponder()    }
+        sender.resignFirstResponder()
+        
+     
+        
+        
+    }
     
    
        func signup_update_password()
@@ -667,19 +716,44 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         }
         
     }
+ 
   
     @objc func keyboardWillShow(notification: NSNotification) {
+         print("keyboard")
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= 100
-            }
+               if UIDevice.current.hasTopNotch
+                                              {
+                                                   
+                                                if self.view.frame.origin.y == 30
+                                                                   {
+                                                                   self.view.frame.origin.y -= 130
+                                                                   }
+                                            }
+                                            else
+                                              {
+                                               if self.view.frame.origin.y == 0
+                                                                  {
+                                                                          self.view.frame.origin.y -= 100
+                                                                  }
+                                            }
         }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
-        }
+         if UIDevice.current.hasTopNotch
+                                 {
+                                     if self.view.frame.origin.y != 0 {
+                                                           self.view.frame.origin.y = 30
+                                                       }
+                               
+                                 }
+                                 else
+                                 {
+                                     if self.view.frame.origin.y != 0 {
+                                               self.view.frame.origin.y = 0
+                                           }
+                                     
+                                 }
     }
     /*
     // MARK: - Navigation
