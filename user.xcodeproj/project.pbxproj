@@ -703,7 +703,7 @@
 				CODE_SIGN_ENTITLEMENTS = user/myScanpay.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3.27;
+				CURRENT_PROJECT_VERSION = 3.32;
 				DEVELOPMENT_TEAM = 579M3N82Z7;
 				INFOPLIST_FILE = user/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -711,7 +711,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.27;
+				MARKETING_VERSION = 3.32;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scanpay.user;
 				PRODUCT_NAME = myScanpay;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -728,7 +728,7 @@
 				CODE_SIGN_ENTITLEMENTS = user/myScanpay.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3.27;
+				CURRENT_PROJECT_VERSION = 3.32;
 				DEVELOPMENT_TEAM = 579M3N82Z7;
 				INFOPLIST_FILE = user/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -736,7 +736,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.27;
+				MARKETING_VERSION = 3.32;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scanpay.user;
 				PRODUCT_NAME = myScanpay;
 				PROVISIONING_PROFILE_SPECIFIER = "";

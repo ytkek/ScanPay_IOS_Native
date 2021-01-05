@@ -34,7 +34,7 @@ class HomeTable: UITableViewController {
     
     
     @IBAction func voucher(_ sender: UIButton) {
-        
+         DispatchQueue.main.async {
         let alert = UIAlertController(title: "", message: "Under Progress" , preferredStyle : .alert)
                           alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
                           switch action.style{
@@ -47,10 +47,12 @@ class HomeTable: UITableViewController {
                                                                                  
                           }}))
                           self.present(alert,animated: true, completion: nil)
+        }
     }
     
     
     @IBAction func rewards(_ sender: UIButton) {
+         DispatchQueue.main.async {
         let alert = UIAlertController(title: "", message: "Under Progress" , preferredStyle : .alert)
                           alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
                           switch action.style{
@@ -63,9 +65,11 @@ class HomeTable: UITableViewController {
                                                                                  
                           }}))
                           self.present(alert,animated: true, completion: nil)
+        }
     }
     
     @IBAction func recommend(_ sender: UIButton) {
+        DispatchQueue.main.async {
         let alert = UIAlertController(title: "", message: "Under Progress" , preferredStyle : .alert)
                    alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
                    switch action.style{
@@ -78,6 +82,7 @@ class HomeTable: UITableViewController {
                                                                           
                    }}))
                    self.present(alert,animated: true, completion: nil)
+        }
     }
     
     @IBAction func findmerchantintent(_ sender: UIButton) {
@@ -90,7 +95,10 @@ class HomeTable: UITableViewController {
         
          let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "scanpayqrcode") as! UIViewController
   nextViewController.modalPresentationStyle = .fullScreen
-               present(nextViewController,animated:true,completion:nil)    }
+               present(nextViewController,animated:true,completion:nil)
+        
+    }
+    
     
     @IBAction func topupintent(_ sender: UIButton) {
         let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "scantopupqrcode") as! UIViewController
@@ -123,16 +131,17 @@ class HomeTable: UITableViewController {
               return cell
           }
          
-      }
+}
+
 
 
 
   extension HomeTable: IndicatorInfoProvider{
-         func indicatorInfo(for pagerTabStripController : PagerTabStripViewController) ->
-             IndicatorInfo{
+         func indicatorInfo(for pagerTabStripController : PagerTabStripViewController) -> IndicatorInfo{
                 
                  return IndicatorInfo(image: UIImage(named : "home"))
              }
          
          }
+
 

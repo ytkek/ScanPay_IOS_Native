@@ -31,7 +31,7 @@ class AboutUs: UIViewController {
                               }
                               else
                               {
-                                  UIApplication.shared.statusBarView?.backgroundColor = .white
+                                   self.navigationController?.setStatusBar(backgroundColor:.white)
                               }
                                                     
                 self.view.frame.origin.y = 30
@@ -39,7 +39,7 @@ class AboutUs: UIViewController {
                 }
                 else
                {
-                 UIApplication.shared.statusBarView?.backgroundColor = .white
+                 self.navigationController?.setStatusBar(backgroundColor:.white)
                     self.view.frame.origin.y = 0
                                                     
                                                     

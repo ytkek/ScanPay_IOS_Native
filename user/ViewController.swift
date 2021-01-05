@@ -24,7 +24,8 @@ class ViewController: UIViewController ,UITextFieldDelegate{
     
  override func viewWillAppear(_ animated: Bool) {
          super.viewWillAppear(true)
-         DispatchQueue.main.async {
+         DispatchQueue.main.async
+            {
             if UIDevice.current.hasTopNotch
             {
                 let screensize: CGRect = UIScreen.main.bounds
@@ -40,7 +41,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
                 }
                 else
                 {
-                    UIApplication.shared.statusBarView?.backgroundColor = .white
+                    self.navigationController?.setStatusBar(backgroundColor:.white)
                 }
              self.view.frame.origin.y = 30
                                               
@@ -48,7 +49,8 @@ class ViewController: UIViewController ,UITextFieldDelegate{
              else
             {
 
-                 UIApplication.shared.statusBarView?.backgroundColor = .white
+                 //UIApplication.shared.statusBarView?.backgroundColor = .white
+                self.navigationController?.setStatusBar(backgroundColor:.white) 
                  self.view.frame.origin.y = 0
                                                  
                                                  
@@ -213,6 +215,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
                  }
                else
                 {
+                    DispatchQueue.main.async {
                   let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
                       alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
                       switch action.style{
@@ -224,6 +227,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
                   case .destructive : break
                   }}))
                   self.present(alert,animated: true, completion: nil)
+                    }
                }
                                 
     }
@@ -291,6 +295,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
           }
         else
          {
+            DispatchQueue.main.async {
            let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
                alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
                switch action.style{
@@ -302,6 +307,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
            case .destructive : break
            }}))
            self.present(alert,animated: true, completion: nil)
+            }
         }
                          
     }
@@ -425,6 +431,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
         }
         else
         {
+            DispatchQueue.main.async {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
             alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
                 switch action.style{
@@ -437,6 +444,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
                 
                 }}))
             self.present(alert,animated: true, completion: nil)
+            }
         }
 
       
@@ -538,17 +546,30 @@ class ViewController: UIViewController ,UITextFieldDelegate{
 }
 
 
-extension Notification.Name{
-    static let TopNotchNotification = Notification.Name("TopNotchNotification")
-}
 
-extension UIApplication{
-    var statusBarView : UIView?{
-        if responds(to: Selector(("statusBar"))){
-            return value(forKey:"statusBar" ) as? UIView
+
+//extension UIApplication{
+//    var statusBarView : UIView?{
+//        if responds(to: Selector(("statusBar"))){
+//            return value(forKey:"statusBar" ) as? UIView
+ //       }
+ //       return nil
+ //   }
+//}
+extension UINavigationController {
+
+    func setStatusBar(backgroundColor: UIColor) {
+        let statusBarFrame: CGRect
+        if #available(iOS 13.0, *) {
+            statusBarFrame = view.window?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero
+        } else {
+            statusBarFrame = UIApplication.shared.statusBarFrame
         }
-        return nil
+        let statusBarView = UIView(frame: statusBarFrame)
+        statusBarView.backgroundColor = backgroundColor
+        view.addSubview(statusBarView)
     }
+
 }
 
 

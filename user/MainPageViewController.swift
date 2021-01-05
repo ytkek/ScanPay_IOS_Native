@@ -57,7 +57,7 @@ class MainPageViewController: ButtonBarPagerTabStripViewController {
                                }
                                else
                                {
-                                   UIApplication.shared.statusBarView?.backgroundColor =  UIColor.init(red: 70/255, green: 138/255, blue: 201/255, alpha: 1.0)
+                                   self.navigationController?.setStatusBar(backgroundColor:UIColor.init(red: 70/255, green: 138/255, blue: 201/255, alpha: 1.0))
                                 
                              
                                }
@@ -67,7 +67,7 @@ class MainPageViewController: ButtonBarPagerTabStripViewController {
                 else
                {
                    
-                UIApplication.shared.statusBarView?.backgroundColor = UIColor.init(red: 70/255, green: 138/255, blue: 201/255, alpha: 1.0)
+                 self.navigationController?.setStatusBar(backgroundColor:UIColor.init(red: 70/255, green: 138/255, blue: 201/255, alpha: 1.0))  
                 print("viewwillappear")
               
                  DispatchQueue.main.async {
@@ -187,8 +187,10 @@ class MainPageViewController: ButtonBarPagerTabStripViewController {
                 self.newcell?.backgroundColor = .white
                 self.newcell?.imageView.image = UIImage(named:"home_blue")
                  
+                 self.oldcell?.imageView.image = UIImage(named:"discovery");
+                self.oldcell?.backgroundColor = UIColor.init(red: 70/255, green: 138/255, blue: 201/255, alpha: 1.0)
                 
-                    print("old self",self.oldcell?.isSelected )
+                print("old self",self.oldcell?.isSelected )
                     print("new self",self.newcell?.isSelected )
                
                 
@@ -227,7 +229,8 @@ class MainPageViewController: ButtonBarPagerTabStripViewController {
                 
                 self.newcell?.backgroundColor = .white
                               self.newcell?.imageView.image = UIImage(named:"setting_blue")
-                               
+                self.oldcell?.imageView.image = UIImage(named:"home");
+                self.oldcell?.backgroundColor = UIColor.init(red: 70/255, green: 138/255, blue: 201/255, alpha: 1.0)
                               
                                   print("old self",self.oldcell?.isSelected )
                                   print("new self",self.newcell?.isSelected )
@@ -265,8 +268,8 @@ class MainPageViewController: ButtonBarPagerTabStripViewController {
           
             self.newcell?.backgroundColor = .white
             self.newcell?.imageView.image = UIImage(named:"home_blue")
-             
-            
+              self.oldcell?.imageView.image = UIImage(named:"setting");
+            self.oldcell?.backgroundColor = UIColor.init(red: 70/255, green: 138/255, blue: 201/255, alpha: 1.0)
                 print("old self",self.oldcell?.isSelected )
                 print("new self",self.newcell?.isSelected )
             //self.newcell?.backgroundColor = .white
@@ -285,7 +288,9 @@ class MainPageViewController: ButtonBarPagerTabStripViewController {
            
              self.newcell?.backgroundColor = .white
             self.newcell?.imageView.image = UIImage(named:"discovery_blue")
-                            
+                
+            self.oldcell?.imageView.image = UIImage(named:"home");
+            self.oldcell?.backgroundColor = UIColor.init(red: 70/255, green: 138/255, blue: 201/255, alpha: 1.0)
                            
                                print("old self",self.oldcell?.isSelected )
                                print("new self",self.newcell?.isSelected )

@@ -32,7 +32,7 @@ class SignUpStep2: UIViewController {
                                }
                                else
                                {
-                                   UIApplication.shared.statusBarView?.backgroundColor = .white
+                                   self.navigationController?.setStatusBar(backgroundColor:.white)
                                }
                 
                 
@@ -43,7 +43,7 @@ class SignUpStep2: UIViewController {
               }
               else
              {
-                 UIApplication.shared.statusBarView?.backgroundColor = .white
+                  self.navigationController?.setStatusBar(backgroundColor:.white)
                   self.view.frame.origin.y = 0
                                                   
                                                   
