@@ -14,39 +14,36 @@ class ForgotPassword: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var sendmypassword: UIButton!
     
-    
-      override func viewWillAppear(_ animated: Bool) {
+override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(true)
-            DispatchQueue.main.async {
+            DispatchQueue.main.async
+            {
                if UIDevice.current.hasTopNotch
                {
-                    
                 let screensize: CGRect = UIScreen.main.bounds
                 let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
                 myView.backgroundColor = .white
-                
                 self.view.addSubview(myView)
-                
                if #available(iOS 13.0, *)
-                              {
-                                  let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
-                                  statusBar.backgroundColor = .white
-                                  UIApplication.shared.keyWindow?.addSubview(statusBar)
-                              }
-                              else
-                              {
-                                  self.navigationController?.setStatusBar(backgroundColor:.white)
-                              }
+               {
+                let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                statusBar.backgroundColor = .white
+                UIApplication.shared.keyWindow?.addSubview(statusBar)
+               }
+               else
+               {
+                 self.navigationController?.setStatusBar(backgroundColor:.white)
+               }
                 self.view.frame.origin.y = 30
                                                  
                 }
                 else
-               {
-                 self.navigationController?.setStatusBar(backgroundColor:.white)
+                {
+                    self.navigationController?.setStatusBar(backgroundColor:.white)
                     self.view.frame.origin.y = 0
                                                     
                                                     
-               }
+                }
             }
            
         }
@@ -54,13 +51,10 @@ class ForgotPassword: UIViewController,UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
-        // Do any additional setup after loading the view.
         loginid.delegate = self
         email.delegate = self
         sendmypassword.isHidden = true
         
-       
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
@@ -76,20 +70,16 @@ class ForgotPassword: UIViewController,UITextFieldDelegate {
             }
        
        
-       func addDoneButtonOnKeyboard(){
+       func addDoneButtonOnKeyboard()
+          {
               let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
               doneToolbar.barStyle = .default
-
               let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
               let done: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.doneButtonAction))
-
               let items = [flexSpace, done]
               doneToolbar.items = items
               doneToolbar.sizeToFit()
-
              loginid.inputAccessoryView = doneToolbar
-            
-              
           }
 
     @objc func doneButtonAction(){
@@ -99,47 +89,36 @@ class ForgotPassword: UIViewController,UITextFieldDelegate {
     }
     private func sendpassword()
        {
-        if Reachability.isConnectedToNetwork(){
+        if Reachability.isConnectedToNetwork()
+        {
            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/Recover_loginid_password.aspx")
-                                     guard let requestUrl = url2 else { fatalError() }
-                                     // Prepare URL Request Object
-                                     var request = URLRequest(url: requestUrl)
-                                     request.httpMethod = "POST"
-                    let value =  "s7OyGTP6ZZmL7t3z"
-                                                    
-                    let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-                                                    
-                    let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-           
-                                     // HTTP Request Parameters which will be sent in HTTP Request Body
-        let postString = "LoginID=60\(loginid.text ?? "")&Email=\(email.text ?? "")&Token=\(postStringencoding ?? "")";
-                                       print(postString)
-                                     // Set HTTP Request Body
-                                     request.httpBody = postString.data(using: String.Encoding.utf8);
-                                     // Perform HTTP Request
-                                     let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                             
-                                             // Check for Error
-                                             if let error = error {
-                                                 print("Error took place \(error)")
-                                                 return
-                                             }
-                                      
-                                             // Convert HTTP Response Data to a String
-                                           if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                                                               print("Response data string:\n \(dataString)")
-
-                                                                                  DispatchQueue.main.async()
-                                                                                    {
-                                                                                        let alert = UIAlertController(title: "Alert", message: dataString , preferredStyle : .alert)
-                                                                                                                                          alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-                                                                                                                                            self.sendmypassword.isEnabled = true
-                                                                                                                                          }))
-                                                                                                       self.present(alert,animated: true, completion: nil)
-                                    }
-                }
+           guard let requestUrl = url2 else { fatalError() }
+           var request = URLRequest(url: requestUrl)
+           request.httpMethod = "POST"
+           let value =  "s7OyGTP6ZZmL7t3z"
+           let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+           let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+           let postString = "LoginID=60\(loginid.text ?? "")&Email=\(email.text ?? "")&Token=\(postStringencoding ?? "")";
+           request.httpBody = postString.data(using: String.Encoding.utf8);
+           let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+           if let error = error
+           {
+              print("Error took place \(error)")
+              return
+           }
+           if let data = data, let dataString = String(data: data, encoding: .utf8)
+           {
+              DispatchQueue.main.async()
+              {
+                let alert = UIAlertController(title: "Alert", message: dataString , preferredStyle : .alert)
+                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+                 self.sendmypassword.isEnabled = true
+                 }))
+                self.present(alert,animated: true, completion: nil)
+              }
             }
-                                     task.resume()
+            }
+                task.resume()
             }
             else
             {
@@ -202,11 +181,7 @@ class ForgotPassword: UIViewController,UITextFieldDelegate {
     
     
     func checkMaxLength(textField: UITextField!, maxLength: Int) {
-        // swift 1.0
-        //if (count(textField.text!) > maxLength) {
-        //    textField.deleteBackward()
-        //}
-        // swift 2.0
+      
         if (textField.text!.characters.count > maxLength) {
             textField.deleteBackward()
         }
@@ -227,42 +202,44 @@ class ForgotPassword: UIViewController,UITextFieldDelegate {
     
   
     @objc func keyboardWillShow(notification: NSNotification) {
-           if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-               
-               if UIDevice.current.hasTopNotch
-                                      {
-                                           
-                                        if self.view.frame.origin.y == 30
-                                                           {
-                                                           self.view.frame.origin.y -= 130
-                                                           }
-                                    }
-                                    else
-                                      {
-                                       if self.view.frame.origin.y == 0
-                                                          {
-                                                                  self.view.frame.origin.y -= 100
-                                                          }
-                                    }
+           if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+           {
+            if UIDevice.current.hasTopNotch
+            {
+              if self.view.frame.origin.y == 30
+               {
+                 self.view.frame.origin.y -= 130
                }
+            }
+            else
+            {
+                if self.view.frame.origin.y == 0
+                {
+                 self.view.frame.origin.y -= 100
+                 }
+            }
+            }
            }
        
 
-       @objc func keyboardWillHide(notification: NSNotification) {
+       @objc func keyboardWillHide(notification: NSNotification)
+       {
            if UIDevice.current.hasTopNotch
-                          {
-                              if self.view.frame.origin.y != 0 {
-                                                    self.view.frame.origin.y = 30
-                                                }
+            {
+                if self.view.frame.origin.y != 0
+                {
+                   self.view.frame.origin.y = 30
+                }
                         
-                          }
-                          else
-                          {
-                              if self.view.frame.origin.y != 0 {
-                                        self.view.frame.origin.y = 0
-                                    }
+            }
+            else
+            {
+                if self.view.frame.origin.y != 0
+                {
+                   self.view.frame.origin.y = 0
+                }
                               
-                          }
+            }
        }
 
 }

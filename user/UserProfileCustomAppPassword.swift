@@ -16,14 +16,13 @@ class UserProfileCustomAppPassword: UIViewController,UITextFieldDelegate {
     var oldpasswordresult = "";
     override func viewDidLoad() {
         super.viewDidLoad()
-            getoldpassword()
+        getoldpassword()
         savebtn.isEnabled = false
-        // Do any additional setup after loading the view.
         newpassword.delegate = self;
         oldpassword.delegate = self;
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-              NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -32,48 +31,31 @@ class UserProfileCustomAppPassword: UIViewController,UITextFieldDelegate {
         }
     func getoldpassword()
     {
-        if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_OldPassword.aspx")
-                      guard let requestUrl = url2 else { fatalError() }
-                      // Prepare URL Request Object
-                      var request = URLRequest(url: requestUrl)
-                      request.httpMethod = "POST"
-            
-             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
+        if Reachability.isConnectedToNetwork()
+        {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_OldPassword.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                              
-            
-                       
-                        let phoneinput = UserPreference.retreiveLoginID()
-                       
-                  
-                             let postString = "Token=\(postStringencoding ?? "")&LoginID=\(phoneinput)";
-                       
-                       // HTTP Request Parameters which will be sent in HTTP Request Body
-                     
-                        print(postString)
-                      // Set HTTP Request Body
-                      request.httpBody = postString.data(using: String.Encoding.utf8);
-                      // Perform HTTP Request
-               
-                      let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                              
-                              // Check for Error
-                              if let error = error {
-                                  print("Error took place \(error)")
-                                  return
-                              }
-                       
-                              // Convert HTTP Response Data to a String
-                             if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                           print("Response data string:\n \(dataString)")
-                                self.oldpasswordresult = dataString
-                        }
-                      }
-                      task.resume()
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let phoneinput = UserPreference.retreiveLoginID()
+            let postString = "Token=\(postStringencoding ?? "")&LoginID=\(phoneinput)";
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+             if let error = error
+             {
+               print("Error took place \(error)")
+               return
+             }
+             if let data = data, let dataString = String(data: data, encoding: .utf8)
+             {
+                print("Response data string:\n \(dataString)")
+                self.oldpasswordresult = dataString
+             }
+            }
+            task.resume()
         }
         else
         {
@@ -105,70 +87,49 @@ class UserProfileCustomAppPassword: UIViewController,UITextFieldDelegate {
     
     func savepassword()
     {
-        if Reachability.isConnectedToNetwork(){
+        if Reachability.isConnectedToNetwork()
+        {
         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_NewPassword.aspx")
-                      guard let requestUrl = url2 else { fatalError() }
-                      // Prepare URL Request Object
-                      var request = URLRequest(url: requestUrl)
-                      request.httpMethod = "POST"
-            
-            
-                      let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-              let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                       
-                        let phoneinput = UserPreference.retreiveLoginID()
-                       
-               let newpasswordstring = newpassword.text
-                        if let myString = newpasswordstring {
-                           let postString = "LoginID=\(phoneinput)&NewPassword=\(myString)&Token=\(postStringencoding ?? "")";
-                                 
-                                 // HTTP Request Parameters which will be sent in HTTP Request Body
-                               
-                                  print(postString)
-                                // Set HTTP Request Body
-                                request.httpBody = postString.data(using: String.Encoding.utf8);
-                                // Perform HTTP Request
-                         }
+        guard let requestUrl = url2 else { fatalError() }
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "POST"
+        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+        let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        let phoneinput = UserPreference.retreiveLoginID()
+        let newpasswordstring = newpassword.text
+        if let myString = newpasswordstring
+        {
+          let postString = "LoginID=\(phoneinput)&NewPassword=\(myString)&Token=\(postStringencoding ?? "")";
+           request.httpBody = postString.data(using: String.Encoding.utf8);
+        }
                             
-                      // Perform HTTP Request
-               
-                      let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                              
-                              // Check for Error
-                              if let error = error {
-                                  print("Error took place \(error)")
-                                  return
-                              }
-                       
-                              // Convert HTTP Response Data to a String
-                             if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                           print("Response data string:\n \(dataString)")
-                               
-                               if dataString == "SAVE PROFILE PASSWORD SUCCESS"
-                               {
-                                   DispatchQueue.main.async {
-                                    
-                                    UserPreference.removeLoginPassword()
-                                    UserPreference.saveLoginPassword(loginpassword: self.newpassword.text ?? "")
-                                   
-                                      let alert = UIAlertController(title: "Alert", message: "Your Password have been changed", preferredStyle: UIAlertControllerStyle.alert)
-                                                                                          alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-                                                                                                                                     
-                                                                                                                                   
-                                                                                                                                     self.dismiss(animated: true, completion: nil)
-                                                                                                                                   
-                                                                                                                                     
-                                                                                                                                    }))
-                                                                                                    self.present(alert, animated: true, completion: nil)
-                                   }
-                               }
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        if let error = error
+        {
+            print("Error took place \(error)")
+            return
+        }
+        if let data = data, let dataString = String(data: data, encoding: .utf8)
+        {
+            print("Response data string:\n \(dataString)")
+            if dataString == "SAVE PROFILE PASSWORD SUCCESS"
+            {
+              DispatchQueue.main.async
+              {
+                UserPreference.removeLoginPassword()
+                UserPreference.saveLoginPassword(loginpassword: self.newpassword.text ?? "")
+                let alert = UIAlertController(title: "Alert", message: "Your Password have been changed", preferredStyle: UIAlertControllerStyle.alert)
+                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+                 self.dismiss(animated: true, completion: nil)
+                  }))
+                 self.present(alert, animated: true, completion: nil)
+              }
+                }
                              
-                        }
-                      }
-                      task.resume()
+                }
+            }
+            task.resume()
         }
         else
         {
@@ -188,9 +149,10 @@ class UserProfileCustomAppPassword: UIViewController,UITextFieldDelegate {
     }
     
     
-    @IBAction func save(_ sender: UIButton) {
+    @IBAction func save(_ sender: UIButton)
+    {
        if oldpassword.text == self.oldpasswordresult
-              {
+        {
                 if newpassword.text?.count ?? 0 >= 4 && newpassword.text?.isAlphanumeric ?? false
                 {
                     self.savepassword()
@@ -209,18 +171,13 @@ class UserProfileCustomAppPassword: UIViewController,UITextFieldDelegate {
                                    
                                    }}))
                                self.present(alert,animated: true, completion: nil)
-                
-                
-                 
                }
                   
               }
        else
        {
            let alert = UIAlertController(title: "Alert ", message: "Old Password not match with system" , preferredStyle : .alert)
-           
             alert.addAction(UIAlertAction(title:"Cancel", style: .default ,handler:{(action: UIAlertAction!) in
-                
             }))
             self.present(alert,animated: true, completion: nil)
        }

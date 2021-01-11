@@ -9,42 +9,39 @@
 import UIKit
 import XLPagerTabStrip
 
-class DiscoveryTable: UITableViewController {
+class DiscoveryTable: UITableViewController
+{
 @IBOutlet var tableview1: UITableView!
     
-    
-    
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-        
         tableview1.tableFooterView = UIView()
         tableview1.estimatedRowHeight = 300
     }
 
-   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+   {
         var cellHeight:CGFloat = CGFloat()
-
-       
-            cellHeight = UIScreen.main.bounds.height
-           
-      
+        cellHeight = UIScreen.main.bounds.height
         return cellHeight
     }
     
-     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            // #warning Incomplete implementation, return the number of rows
+     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+        {
             return 1
         }
 
         
-        override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+        {
             let cell = tableView.dequeueReusableCell(withIdentifier: "discoverycell", for: indexPath) as! DiscoveryCell
-          cell.viewController = self            // Configure the cell...
+            cell.viewController = self
             cell.selectionStyle = .none
             return cell
         }
        
-    }
+}
 
 
 

@@ -11,12 +11,8 @@ import UIKit
 class BalanceTableViewCell: UITableViewCell {
 
     @IBOutlet weak var celldate: UILabel!
-    
-    
     @IBOutlet weak var celltype: UILabel!
-    
     @IBOutlet weak var cellreference: UILabel!
-    
     @IBOutlet weak var cellamount: UILabel!
     
     override func awakeFromNib() {

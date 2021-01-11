@@ -12,63 +12,57 @@ class JomPay: UIViewController,WKUIDelegate,WKNavigationDelegate {
     
 var webview = WKWebView()
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
-        if UIDevice.current.hasTopNotch {
-                   if Reachability.isConnectedToNetwork(){
-                   let url = URL(string : "https://www.myscanpay.com/v4/mobile_native_api/myjompay.aspx?LoginID=\(UserPreference.retreiveLoginID())")
-                   let request = URLRequest(url:url!)
-                   
-                   let webconfiguration  = WKWebViewConfiguration()
-                          webview = WKWebView(frame: CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), configuration: webconfiguration)
-                    webview.navigationDelegate = self
-                   webview.load(request)
-                   self.view.addSubview(webview)
+        if UIDevice.current.hasTopNotch
+        {
+                   if Reachability.isConnectedToNetwork()
+                   {
+                        let url = URL(string : "https://www.myscanpay.com/v4/mobile_native_api/myjompay.aspx?LoginID=\(UserPreference.retreiveLoginID())")
+                        let request = URLRequest(url:url!)
+                        let webconfiguration  = WKWebViewConfiguration()
+                        webview = WKWebView(frame: CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), configuration: webconfiguration)
+                        webview.navigationDelegate = self
+                        webview.load(request)
+                        self.view.addSubview(webview)
                    }
                    else
-                     {
-                       let alert = UIAlertController(title: "Error", message: "Internet Connection Failed" , preferredStyle : .alert)
-                           alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                           switch action.style{
-                                                                                                                    
+                   {
+                        let alert = UIAlertController(title: "Error", message: "Internet Connection Failed" , preferredStyle : .alert)
+                        alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                        switch action.style
+                        {
                            case .default : break
-                                                                                                                       
                            case .cancel : break
-                                                                                                                       
                            case .destructive : break
-                                                                                                                   
-                           }}))
+                            }}))
                            self.present(alert,animated: true, completion: nil)
                        }
                }
                else
                {
-                   if Reachability.isConnectedToNetwork(){
-                   let url = URL(string : "https://www.myscanpay.com/v4/mobile_native_api/myjompay.aspx?LoginID=\(UserPreference.retreiveLoginID())")
-                   let request = URLRequest(url:url!)
-                   
-                   let webconfiguration  = WKWebViewConfiguration()
+                   if Reachability.isConnectedToNetwork()
+                   {
+                        let url = URL(string : "https://www.myscanpay.com/v4/mobile_native_api/myjompay.aspx?LoginID=\(UserPreference.retreiveLoginID())")
+                        let request = URLRequest(url:url!)
+                        let webconfiguration  = WKWebViewConfiguration()
                           webview = WKWebView(frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), configuration: webconfiguration)
-                    
-                    
-                   webview.navigationDelegate = self
-                   webview.load(request)
-                   self.view.addSubview(webview)
+                        webview.navigationDelegate = self
+                        webview.load(request)
+                        self.view.addSubview(webview)
                    }
                    else
-                     {
+                   {
                        let alert = UIAlertController(title: "Error", message: "Internet Connection Failed" , preferredStyle : .alert)
                            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                           switch action.style{
-                                                                                                                    
-                           case .default : break
-                                                                                                                       
-                           case .cancel : break
-                                                                                                                       
-                           case .destructive : break
-                                                                                                                   
-                           }}))
+                           switch action.style
+                           {
+                            case .default : break
+                            case .cancel : break
+                            case .destructive : break
+                            }}))
                            self.present(alert,animated: true, completion: nil)
                        }
                }

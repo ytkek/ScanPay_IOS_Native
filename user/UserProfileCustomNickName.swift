@@ -15,7 +15,7 @@ class UserProfileCustomNickName: UIViewController ,UITextFieldDelegate{
         super.viewDidLoad()
         reloadpage()
         nickname_edit.delegate = self
-        // Do any additional setup after loading the view.
+      
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
                self.view.endEditing(true)
@@ -27,54 +27,45 @@ class UserProfileCustomNickName: UIViewController ,UITextFieldDelegate{
     }
     func reloadpage()
     {
-        if Reachability.isConnectedToNetwork(){
+        if Reachability.isConnectedToNetwork()
+        {
         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetMyProfileList.aspx")
-               guard let requestUrl = url2 else { fatalError() }
-               // Prepare URL Request Object
-               var request = URLRequest(url: requestUrl)
-               request.httpMethod = "POST"
-                
-             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-               let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-                 let phoneinput = UserPreference.retreiveLoginID()
-               // HTTP Request Parameters which will be sent in HTTP Request Body
-                 let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                 print(postString)
-               // Set HTTP Request Body
-               request.httpBody = postString.data(using: String.Encoding.utf8);
-               // Perform HTTP Request
-               let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                       
-                       // Check for Error
-                       if let error = error {
-                           print("Error took place \(error)")
-                           return
-                       }
-                
-                       // Convert HTTP Response Data to a String
-                       if let data = data {
-                          do {
-                             let res = try JSONDecoder().decode(UserInformation.self, from: data)
-                             DispatchQueue.main.async() {
-                                var value = res.datarecords[0].ml_nickname ?? ""
-                               let realString = String(value)
-                               self.nickname_edit.text = realString
-                                                               
-                                               
-                                                            
-                             }
+        guard let requestUrl = url2 else { fatalError() }
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "POST"
+        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+        let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        let phoneinput = UserPreference.retreiveLoginID()
+        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+        request.httpBody = postString.data(using: String.Encoding.utf8);
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        if let error = error
+        {
+            print("Error took place \(error)")
+            return
+        }
+        if let data = data
+        {
+            do
+            {
+                let res = try JSONDecoder().decode(UserInformation.self, from: data)
+                DispatchQueue.main.async()
+                {
+                    var value = res.datarecords[0].ml_nickname ?? ""
+                    let realString = String(value)
+                    self.nickname_edit.text = realString
+                }
                              
-                          } catch let error {
-                             print(error)
-                          }
+            }
+            catch let error
+            {
+                print(error)
+            }
                          
-                       }
-               }
-               task.resume()
+            }
+        }
+        task.resume()
         }
         else
         {
@@ -95,61 +86,47 @@ class UserProfileCustomNickName: UIViewController ,UITextFieldDelegate{
     
     @IBAction func save(_ sender: UIButton)
     {
-         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_NickName.aspx")
-                     guard let requestUrl = url2 else { fatalError() }
-                     // Prepare URL Request Object
-                     var request = URLRequest(url: requestUrl)
-                     request.httpMethod = "POST"
-                      
+         if Reachability.isConnectedToNetwork()
+         {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_NickName.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-                       let phoneinput = UserPreference.retreiveLoginID()
-                      
-              let nicknamestring = nickname_edit.text
-                       if let myString = nicknamestring {
-                          let postString = "LoginID=\(phoneinput)&NickName=\(myString)&Token=\(postStringencoding ?? "")";
-                                
-                                // HTTP Request Parameters which will be sent in HTTP Request Body
-                              
-                                 print(postString)
-                               // Set HTTP Request Body
-                               request.httpBody = postString.data(using: String.Encoding.utf8);
-                               // Perform HTTP Request
-                        }
-                           
-                     // Perform HTTP Request
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let phoneinput = UserPreference.retreiveLoginID()
+            let nicknamestring = nickname_edit.text
+            if let myString = nicknamestring
+            {
+                let postString = "LoginID=\(phoneinput)&NickName=\(myString)&Token=\(postStringencoding ?? "")";
+                request.httpBody = postString.data(using: String.Encoding.utf8);
+            }
               
-                     let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                             
-                             // Check for Error
-                             if let error = error {
-                                 print("Error took place \(error)")
-                                 return
-                             }
-                      
-                             // Convert HTTP Response Data to a String
-                            if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                          print("Response data string:\n \(dataString)")
-                              
-                              if dataString == "SAVE PROFILE NICKNAME SUCCESS"
-                              {
-                                  DispatchQueue.main.async {
-                                     let alert = UIAlertController(title: "Alert", message: "Your NickName have been changed", preferredStyle: UIAlertControllerStyle.alert)
-                                       alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-                                                                                                                                                                                 self.dismiss(animated: true, completion: nil)
-                                                                                                                                                                                    }))
-                                    self.present(alert, animated: true, completion: nil)
-                                  }
-                              }
+               let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+               if let error = error
+               {
+                   print("Error took place \(error)")
+                    return
+               }
+              if let data = data, let dataString = String(data: data, encoding: .utf8)
+              {
+                  print("Response data string:\n \(dataString)")
+                  if dataString == "SAVE PROFILE NICKNAME SUCCESS"
+                  {
+                   DispatchQueue.main.async
+                    {
+                      let alert = UIAlertController(title: "Alert", message: "Your NickName have been changed", preferredStyle: UIAlertControllerStyle.alert)
+                       alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+                       self.dismiss(animated: true, completion: nil)
+                       }))
+                       self.present(alert, animated: true, completion: nil)
+                    }
+                }
                             
-                       }
-                     }
-                     task.resume()
+                }
+            }
+            task.resume()
         }
         else
          {

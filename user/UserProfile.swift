@@ -24,10 +24,6 @@ class UserProfile: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-       
-        // reloadalldatapage();
         
         
     }
@@ -38,117 +34,94 @@ class UserProfile: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        DispatchQueue.main.async {
-                     if UIDevice.current.hasTopNotch
-                     {
-                      
-                      let screensize: CGRect = UIScreen.main.bounds
-                      let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
-                      myView.backgroundColor = .white
-                      
-                      self.view.addSubview(myView)
-                      
-                      if #available(iOS 13.0, *)
-                                     {
-                                         let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
-                                         statusBar.backgroundColor = .white
-                                         UIApplication.shared.keyWindow?.addSubview(statusBar)
-                                     }
-                                     else
-                                     {
-                                         self.navigationController?.setStatusBar(backgroundColor:.white)
-                                     }
+        DispatchQueue.main.async
+        {
+            if UIDevice.current.hasTopNotch
+            {
+                let screensize: CGRect = UIScreen.main.bounds
+                let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
+                myView.backgroundColor = .white
+                self.view.addSubview(myView)
+                if #available(iOS 13.0, *)
+                {
+                 let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                 statusBar.backgroundColor = .white
+                 UIApplication.shared.keyWindow?.addSubview(statusBar)
+                }
+                else
+                {
+                   self.navigationController?.setStatusBar(backgroundColor:.white)
+                }
                                                           
-                      self.view.frame.origin.y = 30
+                   self.view.frame.origin.y = 30
                                                        
-                      }
-                      else
-                     {
-                       self.navigationController?.setStatusBar(backgroundColor:.white)
-                          self.view.frame.origin.y = 0
-                                                          
-                                                          
-                     }
-                  }
+            }
+            else
+            {
+                    self.navigationController?.setStatusBar(backgroundColor:.white)
+                    self.view.frame.origin.y = 0
+            }
+        }
                  
        
     }
     
   public  func reloadalldatapage()
     {
-         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetMyProfileList.aspx")
-                    guard let requestUrl = url2 else { fatalError() }
-                    // Prepare URL Request Object
-                    var request = URLRequest(url: requestUrl)
-                    request.httpMethod = "POST"
-            
-             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-              let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-              let phoneinput = UserPreference.retreiveLoginID()
-            
+         if Reachability.isConnectedToNetwork()
+         {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetMyProfileList.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let phoneinput = UserPreference.retreiveLoginID()
             let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
                 print(postString)
-            
-              
-            
-                    
-                    // HTTP Request Parameters which will be sent in HTTP
-                    // Set HTTP Request Body
-                    request.httpBody = postString.data(using: String.Encoding.utf8);
-                    // Perform HTTP Request
-                    let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                            
-                            // Check for Error
-                            if let error = error {
-                                print("Error took place \(error)")
-                                return
-                            }
-                     
-                            // Convert HTTP Response Data to a String
-                            if let data = data {
-                               do {
-                                  let res = try JSONDecoder().decode(UserInformation.self, from: data)
-                                  DispatchQueue.main.async() {
-                                  print(res)
-                                       self.fullname?.text = res.datarecords[0].ml_Name
-                                                                 self.ID?.text = res.datarecords[0].ml_login
-                                                                 self.apppassword?.text =
-                                                                 res.datarecords[0].ml_password
-                                                                 self.email?.text =
-                                                                 res.datarecords[0].ml_email
-                                                                 
-                                                                 self.mobile?.text = "60\(res.datarecords[0].ml_hpno ?? "")"
-                                                                 
-                                                                 
-                                    if res.datarecords[0].ml_gender == "M"
-                                    {
-                                        self.gender?.text = "male"
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error
+            {
+                print("Error took place \(error)")
+                return
+            }
+            if let data = data
+            {
+                do {
+                    let res = try JSONDecoder().decode(UserInformation.self, from: data)
+                    DispatchQueue.main.async()
+                    {
+                        self.fullname?.text = res.datarecords[0].ml_Name
+                        self.ID?.text = res.datarecords[0].ml_login
+                        self.apppassword?.text = res.datarecords[0].ml_password
+                        self.email?.text = res.datarecords[0].ml_email
+                        self.mobile?.text = "60\(res.datarecords[0].ml_hpno ?? "")"
+                                                                
+                        if res.datarecords[0].ml_gender == "M"
+                        {
+                            self.gender?.text = "male"
                                         
-                                    }
-                                    else if res.datarecords[0].ml_gender == "F"
-                                    {
-                                        self.gender?.text = "female"
-                                    }
+                        }
+                        else if res.datarecords[0].ml_gender == "F"
+                        {
+                            self.gender?.text = "female"
+                        }
                                                                  
-                                                                 self.nickname?.text =
-                                                                     res.datarecords[0].ml_nickname
-                                                                 self.remarks?.text =
-                                                                     res.datarecords[0].ml_remarks
-                                    self.dob?.text = self.convertDateFormat(inputDate:res.datarecords[0].ml_dob ?? "")
-                                                                 self.pinpassword?.text =
-                                                                     res.datarecords[0].ml_paymentpin
-                                  }
+                        self.nickname?.text = res.datarecords[0].ml_nickname
+                        self.remarks?.text = res.datarecords[0].ml_remarks
+                        self.dob?.text = self.convertDateFormat(inputDate:res.datarecords[0].ml_dob ?? "")
+                        self.pinpassword?.text = res.datarecords[0].ml_paymentpin
+                        }
                                   
-                               } catch let error {
-                                  print(error)
-                               }
+                        }
+                        catch let error
+                        {
+                            print(error)
+                        }
                               
-                            }
+                    }
                     }
                     task.resume()
         }
@@ -169,8 +142,8 @@ class UserProfile: UIViewController {
         }
                       
     }
-    func convertDateFormat(inputDate: String) -> String {
-
+    func convertDateFormat(inputDate: String) -> String
+    {
           let olDateFormatter = DateFormatter()
           olDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
           let convertDateFormatter = DateFormatter()

@@ -14,7 +14,6 @@ class UserProfileCustomEmail: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         reloadpage()
     }
     @IBAction func back(_ sender: UIButton) {
@@ -22,48 +21,40 @@ class UserProfileCustomEmail: UIViewController {
     }
     func reloadpage()
        {
-         if Reachability.isConnectedToNetwork(){
+         if Reachability.isConnectedToNetwork()
+         {
            let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetMyProfileList.aspx")
-                  guard let requestUrl = url2 else { fatalError() }
-                  // Prepare URL Request Object
-                  var request = URLRequest(url: requestUrl)
-                  request.httpMethod = "POST"
-                   
-                    let phoneinput = UserPreference.retreiveLoginID()
-                  // HTTP Request Parameters which will be sent in HTTP Request Body
-                    let postString = "LoginID=\(phoneinput)";
-                    print(postString)
-                  // Set HTTP Request Body
-                  request.httpBody = postString.data(using: String.Encoding.utf8);
-                  // Perform HTTP Request
-                  let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                          
-                          // Check for Error
-                          if let error = error {
-                              print("Error took place \(error)")
-                              return
-                          }
-                   
-                          // Convert HTTP Response Data to a String
-                          if let data = data {
-                             do {
-                                let res = try JSONDecoder().decode(UserInformation.self, from: data)
-                                DispatchQueue.main.async() {
-                                    var value = res.datarecords[0].ml_email ?? ""
-                                  let realString = String(value)
-                                    self.email.text = realString
-                                                                  
-                                                  
-                                                               
-                                }
+           guard let requestUrl = url2 else { fatalError() }
+           var request = URLRequest(url: requestUrl)
+           request.httpMethod = "POST"
+           let phoneinput = UserPreference.retreiveLoginID()
+           let postString = "LoginID=\(phoneinput)";
+           request.httpBody = postString.data(using: String.Encoding.utf8);
+           let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+           if let error = error
+           {
+              print("Error took place \(error)")
+              return
+            }
+           if let data = data {
+            do {
+                let res = try JSONDecoder().decode(UserInformation.self, from: data)
+                DispatchQueue.main.async()
+                {
+                    var value = res.datarecords[0].ml_email ?? ""
+                    let realString = String(value)
+                    self.email.text = realString
+                }
                                 
-                             } catch let error {
-                                print(error)
-                             }
+                }
+                    catch let error
+                {
+                    print(error)
+                }
                             
-                          }
-                  }
-                  task.resume()
+                }
+            }
+            task.resume()
             }
             else
             {

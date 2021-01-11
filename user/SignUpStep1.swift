@@ -25,50 +25,47 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var otp4: UITextField!
     @IBOutlet weak var otp5: UITextField!
     @IBOutlet weak var otp6: UITextField!
-    
     var OTPresult = ""
     @IBOutlet weak var resend: UIButton!
-    
     @IBOutlet weak var loginpasswordlabel: UILabel!
     @IBOutlet weak var loginpassword_input: UITextField!
     @IBOutlet weak var confirmpasswordlabel: UILabel!
     @IBOutlet weak var confirmpassword_input: UITextField!
-    
     @IBOutlet weak var nextpage: UIButton!
-    //var timer = Timer()
-   var timer: Timer?
+    var timer: Timer?
     var totalTime = 30
     
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool)
+    {
         super.viewWillAppear(true)
-        DispatchQueue.main.async {
+        DispatchQueue.main.async
+        {
            if UIDevice.current.hasTopNotch
            {
-         let screensize: CGRect = UIScreen.main.bounds
-         let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
-          myView.backgroundColor = .white
-          self.view.addSubview(myView)
-            
-          if #available(iOS 13.0, *)
-                        {
-                            let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
-                            statusBar.backgroundColor = .white
-                            UIApplication.shared.keyWindow?.addSubview(statusBar)
-                        }
-                        else
-                        {
-                            self.navigationController?.setStatusBar(backgroundColor:.white)
+            let screensize: CGRect = UIScreen.main.bounds
+            let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
+            myView.backgroundColor = .white
+            self.view.addSubview(myView)
+            if #available(iOS 13.0, *)
+            {
+                let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                statusBar.backgroundColor = .white
+                UIApplication.shared.keyWindow?.addSubview(statusBar)
+            }
+            else
+            {
+                self.navigationController?.setStatusBar(backgroundColor:.white)
                             
-                        }
+            }
             
             
-            self.view.frame.origin.y = 30
+                self.view.frame.origin.y = 30
                                              
             }
             else
            {
-            self.navigationController?.setStatusBar(backgroundColor:.white)
+                self.navigationController?.setStatusBar(backgroundColor:.white)
                 self.view.frame.origin.y = 0
                                                 
                                                 
@@ -76,10 +73,10 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         }
        
     }
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         code.isEnabled = false
         verify.isHidden = true
         otplabel.isHidden = true
@@ -90,15 +87,12 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         otp5.isHidden = true
         otp6.isHidden = true
         resend.isHidden = true
-        
         loginpasswordlabel.isHidden = true
         loginpassword_input.isHidden=true
         confirmpasswordlabel.isHidden = true
         confirmpassword_input.isHidden = true
-        
         nextpage.isEnabled = false
         nextpage.alpha = 0.5
-        
         phone.delegate = self
         otp1.delegate = self
         otp2.delegate = self
@@ -106,14 +100,9 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         otp4.delegate = self
         otp5.delegate = self
         otp6.delegate = self
-        //loginpassword_input.delegate = self
-       // confirmpassword_input.delegate = self
-        
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
-        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
         self.view.addGestureRecognizer(tapGesture)
         
@@ -129,19 +118,12 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         otp4.resignFirstResponder()
         otp5.resignFirstResponder()
         otp6.resignFirstResponder()
-        
         loginpassword_input.resignFirstResponder()
-        
         confirmpassword_input.resignFirstResponder()
-        
-      
-        
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-       
-        
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
+    {
         let allowedCharacters = "0123456789"
         let allowedCharacterSet = CharacterSet(charactersIn: allowedCharacters)
         let typedCharacterSet = CharacterSet(charactersIn: string)
@@ -166,89 +148,77 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
     
     func validatelogin()
     {
-         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Validate_LoginID.aspx")
-                           guard let requestUrl = url2 else { fatalError() }
-                           // Prepare URL Request Object
-                           var request = URLRequest(url: requestUrl)
-                           request.httpMethod = "POST"
-            
+         if Reachability.isConnectedToNetwork()
+        {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Validate_LoginID.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
             let value = "s7OyGTP6ZZmL7t3z"
-            
             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let phoneinput = "60\(self.phone.text ?? "")"
+            let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+            print(postString)
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error
+            {
+                print("Error took place \(error)")
+                return
+            }
                             
-        let phoneinput = "60\(self.phone.text ?? "")"
-                           // HTTP Request Parameters which will be sent in HTTP Request Body
-        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                             print(postString)
-                           // Set HTTP Request Body
-                           request.httpBody = postString.data(using: String.Encoding.utf8);
-                           // Perform HTTP Request
-                           let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                   
-                                   // Check for Error
-                                   if let error = error {
-                                       print("Error took place \(error)")
-                                       return
-                                   }
-                            
-                                   // Convert HTTP Response Data to a String
-                                 if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                                                     print("Response data string:\n \(dataString)")
-                                                           
-                                                                                 DispatchQueue.main.async()
-                                                                               {
-                                                                                if dataString == "This Login ID not available"
-                                                                                {
-                                                                                    let alert = UIAlertController(title: "Error #A0001", message: "This Login ID not available" , preferredStyle : .alert)
-                                                                                    alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                                                        switch action.style{
-                                                                                         
-                                                                                        case .default : break
-                                                                                            
-                                                                                        case .cancel : break
-                                                                                            
-                                                                                        case .destructive : break
+            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            {
+                print("Response data string:\n \(dataString)")
+                DispatchQueue.main.async()
+                {
+                if dataString == "This Login ID not available"
+                {
+                    let alert = UIAlertController(title: "Error #A0001", message: "This Login ID not available" , preferredStyle : .alert)
+                    alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                    switch action.style
+                    {
+                        case .default : break
+                        case .cancel : break
+                        case .destructive : break
                                                                                         
-                                                                                        }}))
-                                                                                    self.present(alert,animated: true, completion: nil)
-                                                                                }
-                                                                                else if dataString == "This Login allow"
-                                                                                {
+                    }}))
+                    self.present(alert,animated: true, completion: nil)
+                }
+                else if dataString == "This Login allow"
+                {
                                  
-                                                                                    self.sendOTP();                                                      self.verify.isHidden = true
-                                                                                    self.otplabel.isHidden = false
-                                                                                    self.otp1.isHidden = false
-                                                                                                  self.otp2.isHidden = false
-                                                                                                  self.otp3.isHidden = false
-                                                                                                  self.otp4.isHidden = false
-                                                                                                  self.otp5.isHidden = false
-                                                                                                  self.otp6.isHidden = false
-                                                                                           self.resend.isHidden = false
-                                                                                           self.startOtpTimer()
-                                                                                }
+                    self.sendOTP();
+                    self.verify.isHidden = true
+                    self.otplabel.isHidden = false
+                    self.otp1.isHidden = false
+                    self.otp2.isHidden = false
+                    self.otp3.isHidden = false
+                    self.otp4.isHidden = false
+                    self.otp5.isHidden = false
+                    self.otp6.isHidden = false
+                    self.resend.isHidden = false
+                    self.startOtpTimer()
                                                                                 
-                                            }
-                                       }
-                                   }
-                           task.resume()
+                }
+                                                                                
+            }
+        }
+        }
+            task.resume()
         }
         else
          {
             let alert = UIAlertController(title: "Error", message: "Internet Connection Failed" , preferredStyle : .alert)
-                                            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                switch action.style{
-                                                                                                                                                                                     
-                                                case .default : break
-                                                                                                                                                                                        
-                                               case .cancel : break
-                                                                                                                                                                                        
-                                              case .destructive : break
-                                                                                                                                                                                    
-                                            }}))
-                                            self.present(alert,animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style
+            {
+                case .default : break
+                case .cancel : break
+                case .destructive : break
+            }}))
+            self.present(alert,animated: true, completion: nil)
         }
                              
            
@@ -256,69 +226,52 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
     
     func sendOTP()
     {
-         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Send_OTP.aspx")
-                           guard let requestUrl = url2 else { fatalError() }
-                           // Prepare URL Request Object
-                           var request = URLRequest(url: requestUrl)
-                           request.httpMethod = "POST"
-            
+         if Reachability.isConnectedToNetwork()
+         {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Send_OTP.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
             let value =  "s7OyGTP6ZZmL7t3z"
-                           
-                           
             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                            
-        let phoneinput = "60\(self.phone.text ?? "")"
-                           // HTTP Request Parameters which will be sent in HTTP Request Body
-        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                             print(postString)
-                           // Set HTTP Request Body
-                           request.httpBody = postString.data(using: String.Encoding.utf8);
-                           // Perform HTTP Request
-                           let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                   
-                                   // Check for Error
-                                   if let error = error {
-                                       print("Error took place \(error)")
-                                       return
-                                   }
-                            
-                                   // Convert HTTP Response Data to a String
-                                 if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                                                     print("Response data string:\n \(dataString)")
-
-                                                                        DispatchQueue.main.async()
-                                                                               {
-                                                                                self.OTPresult = dataString
+            let phoneinput = "60\(self.phone.text ?? "")"
+            let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+            print(postString)
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error
+            {
+                print("Error took place \(error)")
+                return
+            }
+            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            {
+                print("Response data string:\n \(dataString)")
+                DispatchQueue.main.async()
+                {
+                    self.OTPresult = dataString
                                 
-                                            }
-                                       }
-                                   }
-                           task.resume()
+                }
+            }
+            }
+            task.resume()
         }
         else
          {
             let alert = UIAlertController(title: "Error", message: "Internet Connection Failed" , preferredStyle : .alert)
                 alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                switch action.style{
-                                                                                                                                                                                        
-            case .default : break
-                                                                                                                                        
-            case .cancel : break
-                                                                                                                                        
-            case .destructive : break
-            }}))
+                switch action.style
+                {
+                case .default : break
+                case .cancel : break
+                case .destructive : break
+                }}))
             self.present(alert,animated: true, completion: nil)
         }
     }
     func checkMaxLength(textField: UITextField!, maxLength: Int) {
-        // swift 1.0
-        //if (count(textField.text!) > maxLength) {
-        //    textField.deleteBackward()
-        //}
-        // swift 2.0
+      
         if (textField.text!.characters.count > maxLength) {
             textField.deleteBackward()
         }
@@ -332,17 +285,16 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
             sender.text = ""
         }
         else
+        {
+            if  x! >= 8 && x! <= 10
             {
-                if  x! >= 8 && x! <= 10
-                {
-                    verify.isHidden = false
+                verify.isHidden = false
+            }
+            else
+            {
+                verify.isHidden = true
                           
-                }
-                else
-                {
-                    verify.isHidden = true
-                          
-                }
+            }
                 checkMaxLength(textField: sender as! UITextField, maxLength: 10)
             }
             
@@ -353,7 +305,7 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         let x : Int? = sender.text?.count
         if  x! == 1
         {
-          checkallinformation()
+            checkallinformation()
             otp2.becomeFirstResponder()
         }
         else
@@ -457,20 +409,20 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
         {
             if self.OTPresult == "\(otp1.text ?? "")\(otp2.text ?? "")\(otp3.text ?? "")\(otp4.text ?? "")\(otp5.text ?? "")\(otp6.text ?? "")"
             {
-            otplabel.isHidden = true
-            otp1.isHidden = true
-            otp2.isHidden = true
-            otp3.isHidden = true
-            otp4.isHidden = true
-            otp5.isHidden = true
-            otp6.isHidden = true
-            resend.isHidden = true
-            verify.isHidden = true
-            phone.isEnabled = false
-        loginpasswordlabel.isHidden = false
-        loginpassword_input.isHidden=false
-        confirmpasswordlabel.isHidden = false
-        confirmpassword_input.isHidden = false
+                otplabel.isHidden = true
+                otp1.isHidden = true
+                otp2.isHidden = true
+                otp3.isHidden = true
+                otp4.isHidden = true
+                otp5.isHidden = true
+                otp6.isHidden = true
+                resend.isHidden = true
+                verify.isHidden = true
+                phone.isEnabled = false
+                loginpasswordlabel.isHidden = false
+                loginpassword_input.isHidden=false
+                confirmpasswordlabel.isHidden = false
+                confirmpassword_input.isHidden = false
             }
             else
             {
@@ -495,11 +447,12 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
             
         }
     }
-        private func startOtpTimer() {
-            self.timer?.invalidate()
-            self.totalTime = 30
-                       self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-              }
+        private func startOtpTimer()
+    {
+        self.timer?.invalidate()
+        self.totalTime = 30
+        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+    }
     @objc func updateTimer()
     {
         resend.isEnabled=false
@@ -508,17 +461,18 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
        if totalTime != 0
        {
             totalTime -= 1  // decrease counter timer
-        } else
+        }
+       else
        {
             if let timer = self.timer
             {
               timer.invalidate()
               self.timer = nil
-                 self.resend.setTitle("Resend", for: .normal)
-                       resend.isEnabled=true
-                self.totalTime = 0
+              self.resend.setTitle("Resend", for: .normal)
+              resend.isEnabled=true
+              self.totalTime = 0
                 
-        }
+            }
       }
     }
 
@@ -542,92 +496,74 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
     
     @IBAction func confirmpass_done(_ sender: UITextField) {
         sender.resignFirstResponder()
-        
-     
-        
-        
     }
     
    
        func signup_update_password()
        {
-        if Reachability.isConnectedToNetwork(){
+        if Reachability.isConnectedToNetwork()
+        {
          let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostSignUp_Update_App_Password.aspx")
-                                  guard let requestUrl = url2 else { fatalError() }
-                                  // Prepare URL Request Object
-                                  var request = URLRequest(url: requestUrl)
-                                  request.httpMethod = "POST"
-                 
-                    let value =  "s7OyGTP6ZZmL7t3z"
-                                      
-                    let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-                       
-                    let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-               let phoneinput = "60\(self.phone.text ?? "")"
-                                  // HTTP Request Parameters which will be sent in HTTP Request Body
+        guard let requestUrl = url2 else { fatalError() }
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "POST"
+        let value =  "s7OyGTP6ZZmL7t3z"
+        let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        let phoneinput = "60\(self.phone.text ?? "")"
         global.otp = self.OTPresult
         global.loginid = phoneinput
         let postString = "LoginID=\(phoneinput)&AppPassword=\(confirmpassword_input.text ?? "")&Otp=\(self.OTPresult ?? "")&Token=\(postStringencoding ?? "")";
-                                    print(postString)
-                                  // Set HTTP Request Body
-                                  request.httpBody = postString.data(using: String.Encoding.utf8);
-                                  // Perform HTTP Request
-                                  let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                          
-                                          // Check for Error
-                                          if let error = error {
-                                              print("Error took place \(error)")
-                                              return
-                                          }
-                                   
-                                          // Convert HTTP Response Data to a String
-                                        if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                                                            print("Response data string:\n \(dataString)")
-
-                                                                               DispatchQueue.main.async()
-                                                                                      {
-                                                                                    if dataString == "Update Password Success"
-                                                                                    {
-                                                                                        let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "signupstep2") as! UIViewController
-                                                                 nextViewController.modalPresentationStyle = .fullScreen
-                                                                                        self.present(nextViewController,animated:true,completion:nil)
-                                                                                        }
-                                                                                        else
-                                                                                    {
-                                                                                        let alert = UIAlertController(title: "Error #A0004", message: "Update Password Fail" , preferredStyle : .alert)
-                                                                                        alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                                                            switch action.style{
-                                                                                             
-                                                                                            case .default : break
-                                                                                                
-                                                                                            case .cancel : break
-                                                                                                
-                                                                                            case .destructive : break
-                                                                                            
-                                                                                            }}))
-                                                                                        self.present(alert,animated: true, completion: nil)
-                                                                                        }
+        print(postString)
+        request.httpBody = postString.data(using: String.Encoding.utf8);
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        if let error = error
+        {
+            print("Error took place \(error)")
+            return
+        }
+        
+        if let data = data, let dataString = String(data: data, encoding: .utf8)
+        {
+            print("Response data string:\n \(dataString)")
+            DispatchQueue.main.async()
+            {
+                if dataString == "Update Password Success"
+                {
+                    let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "signupstep2") as! UIViewController
+                    nextViewController.modalPresentationStyle = .fullScreen
+                    self.present(nextViewController,animated:true,completion:nil)
+                }
+                else
+                {
+                    let alert = UIAlertController(title: "Error #A0004", message: "Update Password Fail" , preferredStyle : .alert)
+                    alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                    switch action.style
+                    {
+                    case .default : break
+                    case .cancel : break
+                    case .destructive : break
+                    }}))
+                    self.present(alert,animated: true, completion: nil)
+                }
                                                                         
                                        
-                                                   }
-                                              }
-                                          }
-                                  task.resume()
+            }
+            }
+            }
+                task.resume()
         }
         else
         {
             let alert = UIAlertController(title: "Error", message: "Internet Connection Failed" , preferredStyle : .alert)
                 alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                switch action.style{
-                                                                                                                                                                                        
-            case .default : break
-                                                                                                                                        
-            case .cancel : break
-                                                                                                                                        
-            case .destructive : break
-            }}))
-            self.present(alert,animated: true, completion: nil)
+                switch action.style
+                {
+                    case .default : break
+                    case .cancel : break
+                    case .destructive : break
+                 }}))
+                    self.present(alert,animated: true, completion: nil)
         }
     }
     @IBAction func nextpage_click(_ sender: UIButton) {
@@ -723,38 +659,40 @@ class SignUpStep1: UIViewController,UITextFieldDelegate {
          print("keyboard")
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                if UIDevice.current.hasTopNotch
-                                              {
+                {
                                                    
-                                                if self.view.frame.origin.y == 30
-                                                                   {
-                                                                   self.view.frame.origin.y -= 130
-                                                                   }
-                                            }
-                                            else
-                                              {
-                                               if self.view.frame.origin.y == 0
-                                                                  {
-                                                                          self.view.frame.origin.y -= 100
-                                                                  }
-                                            }
+                    if self.view.frame.origin.y == 30
+                    {
+                        self.view.frame.origin.y -= 130
+                    }
+                }
+                else
+                {
+                    if self.view.frame.origin.y == 0
+                    {
+                        self.view.frame.origin.y -= 100
+                    }
+                }
         }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
          if UIDevice.current.hasTopNotch
-                                 {
-                                     if self.view.frame.origin.y != 0 {
-                                                           self.view.frame.origin.y = 30
-                                                       }
+        {
+            if self.view.frame.origin.y != 0
+            {
+                self.view.frame.origin.y = 30
+            }
                                
-                                 }
-                                 else
-                                 {
-                                     if self.view.frame.origin.y != 0 {
-                                               self.view.frame.origin.y = 0
-                                           }
+        }
+        else
+        {
+            if self.view.frame.origin.y != 0
+            {
+                self.view.frame.origin.y = 0
+            }
                                      
-                                 }
+        }
     }
     /*
     // MARK: - Navigation

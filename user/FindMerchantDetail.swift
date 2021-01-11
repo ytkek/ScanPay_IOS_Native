@@ -13,18 +13,12 @@ import MessageUI
 class FindMerchantDetail: UIViewController, MFMailComposeViewControllerDelegate {
 
     @IBOutlet weak var companyname_label: UILabel!
-    
     @IBOutlet weak var profileimage: UIImageView!
-    
     @IBOutlet weak var time_label: UILabel!
-    
     @IBOutlet weak var remarks_label: UILabel!
-    
     @IBOutlet weak var image1: UIImageView!
     @IBOutlet weak var image2: UIImageView!
     @IBOutlet weak var image3: UIImageView!
-    
-    
     var findmerchant_companyname = ""
     var findmerchant_domain = "https://www.myscanpay.com/"
     var findmerchant_profileimagepath = ""
@@ -32,7 +26,6 @@ class FindMerchantDetail: UIViewController, MFMailComposeViewControllerDelegate 
     var findmerchant_photofilename1 = ""
     var findmerchant_photofilename2 = ""
     var findmerchant_photofilename3 = ""
-    
     var findmerchant_address1 = ""
     var findmerchant_address2 = ""
     var findmerchant_address3 = ""
@@ -50,29 +43,24 @@ class FindMerchantDetail: UIViewController, MFMailComposeViewControllerDelegate 
     var findmerchant_latitude = ""
     var findmerchant_businesshour = ""
     var findmerchant_remarks = ""
-   
     var urlString = ""
-     var urlString1 = ""
-     var urlString2 = ""
-     var urlString3 = ""
+    var urlString1 = ""
+    var urlString2 = ""
+    var urlString3 = ""
     override func viewDidLoad() {
         super.viewDidLoad()
 
         companyname_label.text = findmerchant_companyname
-         let transformerprofile = SDImageResizingTransformer(size: CGSize(width: 300, height: 250), scaleMode: .fill)
+        let transformerprofile = SDImageResizingTransformer(size: CGSize(width: 300, height: 250), scaleMode: .fill)
           urlString = findmerchant_domain + (findmerchant_profileimagepath ?? "") + (findmerchant_profilefilename ?? "")
           profileimage.sd_setImage(with: URL(string: urlString), placeholderImage: UIImage(named: "messagecenter"), context: [.imageTransformer: transformerprofile])
-        
         let transformer = SDImageResizingTransformer(size: CGSize(width: 300, height: 300), scaleMode: .fill)
          urlString1 = findmerchant_domain + (findmerchant_profileimagepath ?? "") + (findmerchant_photofilename1 ?? "")
         image1.sd_setImage(with: URL(string: urlString1), placeholderImage: UIImage(named: "messagecenter"), context: [.imageTransformer: transformer])
-        
         urlString2 = findmerchant_domain + (findmerchant_profileimagepath ?? "") + (findmerchant_photofilename2 ?? "")
               image2.sd_setImage(with: URL(string: urlString2), placeholderImage: UIImage(named: "messagecenter"),context: [.imageTransformer: transformer])
-        
         urlString3 = findmerchant_domain + (findmerchant_profileimagepath ?? "") + (findmerchant_photofilename3 ?? "")
                      image3.sd_setImage(with: URL(string: urlString3), placeholderImage: UIImage(named: "messagecenter"),context: [.imageTransformer: transformer])
-        
         time_label.text = findmerchant_businesshour
         remarks_label.text = findmerchant_remarks
         
@@ -115,10 +103,6 @@ class FindMerchantDetail: UIViewController, MFMailComposeViewControllerDelegate 
     @IBAction func website(_ sender: UIButton) {
            UIApplication.shared.openURL(NSURL(string:findmerchant_url)! as URL)
              }
-    
-
- 
-
     
     @IBAction func email(_ sender: UIButton) {
          if MFMailComposeViewController.canSendMail() {

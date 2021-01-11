@@ -12,8 +12,7 @@ import Foundation
 
 class ScanPayQRCode: UIViewController,UITextFieldDelegate {
  var indicator = false;
-    var indicator2 = "YES";
-    
+ var indicator2 = "YES";
     
     @IBOutlet var qrpay_VIew: UIView!
     @IBOutlet weak var checkotp1: UIView!
@@ -21,28 +20,20 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var setnewotp: UIView!
     @IBOutlet weak var payment: UIView!
     @IBOutlet weak var error_message: UIView!
-    
     @IBOutlet weak var payment_success: UIView!
-    
     @IBOutlet weak var payment_success_amount: UILabel!
-    
     @IBOutlet weak var payment_success_date: UILabel!
-    
     @IBOutlet weak var payment_success_merchant: UILabel!
-    
-    
     @IBOutlet weak var getnewotp: UIButton!
     @IBOutlet weak var resend_btn: UIButton!
     @IBOutlet weak var enter_newotp: UITextField!
     @IBOutlet weak var confirm_newotp: UIButton!
     @IBOutlet weak var mobile_id: UILabel!
-    
     @IBOutlet weak var user_spend: UILabel!
     @IBOutlet weak var merchant_name: UILabel!
     var merchant_name_single = ""
     @IBOutlet weak var error_message_label: UILabel!
     @IBOutlet weak var amount: UITextField!
-    
     @IBOutlet weak var pin1: UITextField!
     @IBOutlet weak var pin2: UITextField!
     @IBOutlet weak var pin3: UITextField!
@@ -50,22 +41,16 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var pin5: UITextField!
     @IBOutlet weak var pin6: UITextField!
     @IBOutlet weak var change_password: UIButton!
-    
-    
     @IBOutlet weak var confirm_btn: UIButton!
-    
-   
+
     var timer: Timer?
     var totalTime = 30
-    
     var result_otp = ""
     var type = ""
     var merchantid = ""
     var qr_amount = ""
     var lqrcode = ""
     var qrcode = ""
-    
-    
     var monthexp = ""
     var dailyexp = ""
     var creditbalance = ""
@@ -74,40 +59,38 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        DispatchQueue.main.async {
+        DispatchQueue.main.async
+        {
            if UIDevice.current.hasTopNotch
            {
-         let screensize: CGRect = UIScreen.main.bounds
-         let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
-          myView.backgroundColor = .white
-          self.view.addSubview(myView)
-         if #available(iOS 13.0, *)
-                        {
-                            let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
-                            statusBar.backgroundColor = .white
-                            UIApplication.shared.keyWindow?.addSubview(statusBar)
-                        }
-                        else
-                        {
-                            self.navigationController?.setStatusBar(backgroundColor:.white)
-                        }
-            self.view.frame.origin.y = 30
+                let screensize: CGRect = UIScreen.main.bounds
+                let myView = UIView(frame: CGRect(x: 0, y: -30, width: screensize.width, height: 30))
+                myView.backgroundColor = .white
+                self.view.addSubview(myView)
+            if #available(iOS 13.0, *)
+            {
+                let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+                statusBar.backgroundColor = .white
+                UIApplication.shared.keyWindow?.addSubview(statusBar)
+            }
+            else
+            {
+                self.navigationController?.setStatusBar(backgroundColor:.white)
+            }
+                self.view.frame.origin.y = 30
                                              
             }
             else
-           {
-             self.navigationController?.setStatusBar(backgroundColor:.white)
+            {
+                self.navigationController?.setStatusBar(backgroundColor:.white)
                 self.view.frame.origin.y = 0
-                                                
-                                                
-           }
+            }
         }
        
     }
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         
          if UIDevice.current.hasTopNotch
          {
@@ -120,7 +103,7 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
             self.getnewotp.frame.origin.y += 50
         }
         else
-         {
+        {
             
         }
         pin1.delegate = self
@@ -138,20 +121,13 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
         checkotp1.isHidden = true
         checkotp2.isHidden = true
         getnewotp.isHidden = true
-        
         setnewotp.isHidden = true
         confirm_newotp.isHidden = true
         payment.isHidden = true
         error_message.isHidden = true
         error_message_label.isHidden = true
         enter_newotp.delegate = self
-        //amount.delegate = self
-        
-        
         confirm_btn.isEnabled = false
-        
-      
-        
         payment_success.isHidden = true
         self.addDoneButtonOnKeyboard()
     }
@@ -164,39 +140,32 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
         self.dismiss(animated: true, completion: nil)
     }
     
-   
-    
     @IBAction func confirm_pay(_ sender: UIButton) {
         
         if self.amount.text == ""
         {
             let alert = UIAlertController(title: "Error #A0039 ", message: "Amount Can't be empty" , preferredStyle : .alert)
             alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                switch action.style{
-                                                           
-                    case .default : break
-                                                              
-                      case .cancel : break
-                                                              
-                       case .destructive : break
-                                                          
-                      }}))
-                      self.present(alert,animated: true, completion: nil)
+            switch action.style
+            {
+              case .default : break
+              case .cancel : break
+              case .destructive : break
+            }}))
+            self.present(alert,animated: true, completion: nil)
         }
         else
         {
             if qrcodeexpired == false
             {
                 self.qramount = self.amount.text ?? ""
-                       // validate_pinnumber()
-                        duplicate_transaction_task()
+                duplicate_transaction_task()
             }
             else if qrcodeexpired == true
             {
                 QRValidTask()
                 self.qramount = self.amount.text ?? ""
-                       // validate_pinnumber()
-                        duplicate_transaction_task()
+                duplicate_transaction_task()
                 
             }
                 
@@ -207,61 +176,51 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
     
     func duplicate_transaction_task()
     {
-        if Reachability.isConnectedToNetwork(){
+        if Reachability.isConnectedToNetwork()
+        {
             let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Duplicate_Transaction_Alert.aspx")
-                    guard let requestUrl = url2 else { fatalError() }
-                                                                 // Prepare URL Request Object
-                    var request = URLRequest(url: requestUrl)
-                        request.httpMethod = "POST"
-                       
-                    let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-                       
-                       let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-                       
-                         let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
             let postString = "MerchantID=\(self.merchantid)&Type=\(self.type)&Amount=\(self.amount.text ?? "")&MemberID=\(UserPreference.retreiveLoginID())&Token=\(postStringencoding ?? "")";
-            
             request.httpBody = postString.data(using: String.Encoding.utf8);
-                            
-                                                                 
-                                                                // Perform HTTP Request
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                                                        
-                                                                        // Check for Error
-            if let error = error {
-                    print("Error took place \(error)")
+            if let error = error
+            {
                     return
             }
                                                                  
-                                                                        // Convert HTTP Response Data to a String
-            if let data = data, let dataString = String(data: data, encoding: .utf8) {
-            print("Response data string:\n \(dataString)")
-                  let result = dataString
-                    DispatchQueue.main.async()
-                    {
-                        if result == "Transaction Duplicate Found"
-                        {
-                            let alert = UIAlertController(title: "#A1100 Same merchant and amount detected, Are you sure to continue?", message: "" , preferredStyle : .alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-                                alert.dismiss(animated:true, completion: nil)
-                                self.app_success_message_log(success_message: "Transaction Duplicate Accepted")
-                               self.validate_pinnumber()
-                                }))
+            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            {
+         
+            let result = dataString
+            DispatchQueue.main.async()
+            {
+                if result == "Transaction Duplicate Found"
+                {
+                    let alert = UIAlertController(title: "#A1100 Same merchant and amount detected, Are you sure to continue?", message: "" , preferredStyle : .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+                    alert.dismiss(animated:true, completion: nil)
+                    self.app_success_message_log(success_message: "Transaction Duplicate Accepted")
+                    self.validate_pinnumber()
+                }))
 
-                                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
-                                alert.dismiss(animated:true, completion: nil)
-                                self.dismiss(animated: true, completion: nil)
-                                }))
-                                self.present(alert,animated: true, completion: nil)
-                            self.app_error_message_log(error_message: "Transaction Duplicate Cancel")
-                        }
-                        else if result == "Transaction Duplicate Not Found"
-                        {
-                            self.validate_pinnumber()
-                        }
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+                    alert.dismiss(animated:true, completion: nil)
+                    self.dismiss(animated: true, completion: nil)
+                    }))
+                    self.present(alert,animated: true, completion: nil)
+                    self.app_error_message_log(error_message: "Transaction Duplicate Cancel")
+                }
+                else if result == "Transaction Duplicate Not Found"
+                {
+                    self.validate_pinnumber()
+                }
                
-                    }
+            }
                     
                 
             }
@@ -274,392 +233,293 @@ class ScanPayQRCode: UIViewController,UITextFieldDelegate {
     
     func comfirm_pay_task()
     {
-         if Reachability.isConnectedToNetwork(){
+         if Reachability.isConnectedToNetwork()
+         {
             let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Confirm_Pay.aspx")
-                                                      guard let requestUrl = url2 else { fatalError() }
-                                                      // Prepare URL Request Object
-                                                      var request = URLRequest(url: requestUrl)
-                                                      request.httpMethod = "POST"
-            
-                   let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-            
-                let postString = "LoginID=\(UserPreference.retreiveLoginID())&MerchantID=\(self.merchantid)&MerchantName=\(self.merchant_name_single)&type=\(self.type)&Amount=\(self.amount.text ?? "")&qrcode=\(self.qrcode)&dyqrcode=\(self.lqrcode)&Token=\(postStringencoding ?? "")";
-                                                                                                 // Set HTTP Request Body
-                                                                                                 
-                   request.httpBody = postString.data(using: String.Encoding.utf8);
-                  
-                                                       
-                                                      // Perform HTTP Request
-                                                      let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                                              
-                                                              // Check for Error
-                                                              if let error = error {
-                                                                  print("Error took place \(error)")
-                                                                  return
-                                                              }
-                                                       
-                                                              // Convert HTTP Response Data to a String
-                                                              if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                              print("Response data string:\n \(dataString)")
-                                                              let result = dataString
-                                                          DispatchQueue.main.async()
-                                                        {
-                                                            if result == "payment success"
-                                                            {
-                                                           self.app_success_message_log(success_message: "success payment \(self.lqrcode ?? "")\(self.qrcode ?? "")")
-                                                           self.payment_success.isHidden = false
-                                                           self.payment_success_amount.text = "Amount:  \(self.amount.text ?? "")"
-                                                           var currentDateTime = Date()
-                                                           let dateFormatter = DateFormatter()
-                                                           dateFormatter.dateFormat = "dd MMM yyyy HH:mm:ss"
-                                                           
-                                                           let result = dateFormatter.string(from:currentDateTime)
-                                                           
-                                                           self.payment_success_date.text = result
-                                                           self.payment_success_merchant.text = self.merchant_name_single
-                                                            }
-                                                            else
-                                                            {
-                                                                self.app_error_message_log(error_message: "unsuccess payment \(self.lqrcode ?? "")\(self.qrcode ?? "")")
-                                                            }
-                                                        }
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let postString = "LoginID=\(UserPreference.retreiveLoginID())&MerchantID=\(self.merchantid)&MerchantName=\(self.merchant_name_single)&type=\(self.type)&Amount=\(self.amount.text ?? "")&qrcode=\(self.qrcode)&dyqrcode=\(self.lqrcode)&Token=\(postStringencoding ?? "")";                       request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error
+            {
+                return
+            }
+            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            {
+                print("Response data string:\n \(dataString)")
+               let result = dataString
+               DispatchQueue.main.async()
+               {
+                if result == "payment success"
+                {
+                 self.app_success_message_log(success_message: "success payment \(self.lqrcode ?? "")\(self.qrcode ?? "")")
+                 self.payment_success.isHidden = false
+                 self.payment_success_amount.text = "Amount:  \(self.amount.text ?? "")"
+                 var currentDateTime = Date()
+                 let dateFormatter = DateFormatter()
+                 dateFormatter.dateFormat = "dd MMM yyyy HH:mm:ss"
+                 let result = dateFormatter.string(from:currentDateTime)
+                 self.payment_success_date.text = result
+                 self.payment_success_merchant.text = self.merchant_name_single
+                }
+                else
+                {
+                 self.app_error_message_log(error_message: "unsuccess payment \(self.lqrcode ?? "")\(self.qrcode ?? "")")
+                }
+                }
                 }
             }
-                                                      task.resume()
+            task.resume()
 
          }
         else
-               {
-                   let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                       alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                   switch action.style{
-                                                                                                                           
-                   case .default : break
-                                                                                                                              
-                   case .cancel : break
-                                                                                                                              
-                   case .destructive : break
-                                                                                                                          
-                   }}))
-                   self.present(alert,animated: true, completion: nil)
-               }
+        {
+            let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
+            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style
+            {
+             case .default : break
+             case .cancel : break
+             case .destructive : break
+            }}))
+            self.present(alert,animated: true, completion: nil)
+            }
     }
     func app_error_message_log(error_message : String?)
     {
-        if Reachability.isConnectedToNetwork(){
-               let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostApp_Error_Message.aspx")
-                                                         guard let requestUrl = url2 else { fatalError() }
-                                                         // Prepare URL Request Object
-                                                         var request = URLRequest(url: requestUrl)
-                                                         request.httpMethod = "POST"
-                                                         
-                   let postString = "LoginID=\(UserPreference.retreiveLoginID())&Message=\(error_message ?? "")";
-                                                                                                    // Set HTTP Request Body
-                                                                                                    request.httpBody = postString.data(using: String.Encoding.utf8);
-                     
-                                                          
-                                                         // Perform HTTP Request
-                                                         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        if Reachability.isConnectedToNetwork()
+        {
+           let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostApp_Error_Message.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let postString = "LoginID=\(UserPreference.retreiveLoginID())&Message=\(error_message ?? "")";
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+             if let error = error
+             {
+                return
+             }
+            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            {
+                print("Response data string:\n \(dataString)")
                                                                  
-                                                                 // Check for Error
-                                                                 if let error = error {
-                                                                     print("Error took place \(error)")
-                                                                     return
-                                                                 }
-                                                          
-                                                                 // Convert HTTP Response Data to a String
-                                                                 if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                                 print("Response data string:\n \(dataString)")
-                                                                 
-                                                            
-                   }
-               }
-                                                         task.resume()
-                }
+                                
+            }
+            }
+                task.resume()
+            }
                else
-                      {
-                          let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                              alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                          switch action.style{
-                                                                                                                                  
-                          case .default : break
-                                                                                                                                     
-                          case .cancel : break
-                                                                                                                                     
-                          case .destructive : break
-                                                                                                                                 
-                          }}))
-                          self.present(alert,animated: true, completion: nil)
-                      }
+            {
+                let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
+                alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                switch action.style
+                {
+                 case .default : break
+                 case .cancel : break
+                 case .destructive : break
+                 }}))
+                 self.present(alert,animated: true, completion: nil)
+            }
     }
     func app_success_message_log(success_message : String?)
-       {
-           if Reachability.isConnectedToNetwork(){
+    {
+           if Reachability.isConnectedToNetwork()
+           {
                   let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/PostApp_Success_Message.aspx")
-                                                            guard let requestUrl = url2 else { fatalError() }
-                                                            // Prepare URL Request Object
-                                                            var request = URLRequest(url: requestUrl)
-                                                            request.httpMethod = "POST"
-                                                            
-                      let postString = "LoginID=\(UserPreference.retreiveLoginID())&Message=\(success_message ?? "")";
-                                                                                                       // Set HTTP Request Body
-                                                                                                       request.httpBody = postString.data(using: String.Encoding.utf8);
-                        
-                                                             
-                                                            // Perform HTTP Request
-                                                            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                                                    
-                                                                    // Check for Error
-                                                                    if let error = error {
-                                                                        print("Error took place \(error)")
-                                                                        return
-                                                                    }
-                                                             
-                                                                    // Convert HTTP Response Data to a String
-                                                                    if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                                    print("Response data string:\n \(dataString)")
-                                                                    
-                                                               
-                      }
+                  guard let requestUrl = url2 else { fatalError() }
+                  var request = URLRequest(url: requestUrl)
+                  request.httpMethod = "POST"
+                  let postString = "LoginID=\(UserPreference.retreiveLoginID())&Message=\(success_message ?? "")";
+                  request.httpBody = postString.data(using: String.Encoding.utf8);
+                  let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                  if let error = error
+                  {
+                       return
                   }
-                                                            task.resume()
+                  if let data = data, let dataString = String(data: data, encoding: .utf8)
+                  {
+                     print("Response data string:\n \(dataString)")
+                                                                    
+                  }
+                  }
+                    task.resume()
                    }
-                  else
-                         {
-                             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                                 alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                             switch action.style{
-                                                                                                                                     
-                             case .default : break
-                                                                                                                                        
-                             case .cancel : break
-                                                                                                                                        
-                             case .destructive : break
-                                                                                                                                    
-                             }}))
-                             self.present(alert,animated: true, completion: nil)
-                         }
+                    else
+                   {
+                        let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
+                        alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                        switch action.style
+                        {
+                          case .default : break
+                          case .cancel : break
+                          case .destructive : break
+                           }}))
+                          self.present(alert,animated: true, completion: nil)
+                    }
        }
     func validate_pinnumber()
     {
-         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Validate_PinNumber.aspx")
-                                    guard let requestUrl = url2 else { fatalError() }
-                                    // Prepare URL Request Object
-                                    var request = URLRequest(url: requestUrl)
-                                    request.httpMethod = "POST"
-            
-              let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                                
-                                      let phoneinput = UserPreference.retreiveLoginID()
-let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? "")\(self.pin4.text ?? "")\(self.pin5.text ?? "")\(self.pin6.text ?? "")"
-                                    // HTTP Request Parameters which will be sent in HTTP Request Body
-        print (pinnum)
-      //   if let myString = pinnum {
-                                      let postString = "LoginID=\(phoneinput)&Pin_Number=\(pinnum)&Token=\(postStringencoding ?? "")";
-                                    // Set HTTP Request Body
-                                    request.httpBody = postString.data(using: String.Encoding.utf8);
-                                    // Perform HTTP Request
-       // }
-                                    let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                            
-                                            // Check for Error
-                                            if let error = error {
-                                                print("Error took place \(error)")
-                                                return
-                                            }
-                                     
-                                            // Convert HTTP Response Data to a String
-                                            if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                            print("Response data string:\n \(dataString)")
-                                             let result = dataString
-                                              
-                                            
-                                             DispatchQueue.main.async(){
-                                                if result == "Valid Pin Number"
-                                                {
-                                                   
-                                                    
-                                                    if  let b = Double(self.amount.text ?? "") , let a = Double(self.creditbalance), b>a
-                                                    {
-                                                       
-                                                        let alert = UIAlertController(title: "Error #A0035", message: "Not Enough Credit" , preferredStyle : .alert)
-                                                                                                          
-                                                        alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                                                                               switch action.style{
-                                                                                                                
-                                                                                                               case .default :
-                                                                 self.dismiss(animated: true, completion: nil)
-                                                                                                                self.app_error_message_log(error_message: "unsuccessful payment Error #A0035 Not Enough Credit");                                       break
-                                                                                                                   
-                                                                                                               case .cancel : break
-                                                                                                                   
-                                                                                                               case .destructive : break
-                                                                                                               
-                                                                                                               }}))
-                                                                                                           self.present(alert,animated: true, completion: nil)
-                                                    }
-                                                    else if let b = Double(self.amount.text ?? ""),let c = Double(self.dailyexp), b > c
-                                                    {
-                                                       
-                                                        let alert = UIAlertController(title: "Error #A0036", message: "Not allow to exceed daily limit" , preferredStyle : .alert)
-                                                        alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                            switch action.style{
-                                                             
-                                                            case .default :
-                                                                self.dismiss(animated: true, completion: nil)
-                                                                 self.app_error_message_log(error_message: "unsuccessful payment Error #A0036 Not allow to exceed daily limit")
-                                                                
-                                                                break
-                                                                
-                                                            case .cancel : break
-                                                               
-                                                            case .destructive : break
+         if Reachability.isConnectedToNetwork()
+         {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Validate_PinNumber.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let phoneinput = UserPreference.retreiveLoginID()
+            let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? "")\(self.pin4.text ?? "")\(self.pin5.text ?? "")\(self.pin6.text ?? "")"
+            let postString = "LoginID=\(phoneinput)&Pin_Number=\(pinnum)&Token=\(postStringencoding ?? "")";
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+             if let error = error
+             {
+               return
+             }
+             if let data = data, let dataString = String(data: data, encoding: .utf8)
+             {
+                 print("Response data string:\n \(dataString)")
+                 let result = dataString
+                DispatchQueue.main.async()
+                {
+                   if result == "Valid Pin Number"
+                    {
+                   if  let b = Double(self.amount.text ?? "") , let a = Double(self.creditbalance), b>a
+                    {
+                    let alert = UIAlertController(title: "Error #A0035", message: "Not Enough Credit" , preferredStyle : .alert)
+                    alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                    switch action.style
+                    {
+                     case .default :
+                     self.dismiss(animated: true, completion: nil)
+                     self.app_error_message_log(error_message: "unsuccessful payment Error #A0035 Not Enough Credit");                             break
+                     case .cancel : break
+                     case .destructive : break
+                     }}))
+                     self.present(alert,animated: true, completion: nil)
+                    }
+                    else if let b = Double(self.amount.text ?? ""),let c = Double(self.dailyexp), b > c
+                    {
+                      let alert = UIAlertController(title: "Error #A0036", message: "Not allow to exceed daily limit" , preferredStyle : .alert)
+                      alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                       switch action.style
+                       {
+                        case .default :
+                         self.dismiss(animated: true, completion: nil)
+                         self.app_error_message_log(error_message: "unsuccessful payment Error #A0036 Not allow to exceed daily limit")
+                         break
+                         case .cancel : break
+                         case .destructive : break
+                         }}))
+                         self.present(alert,animated: true, completion: nil)
+                       }
+                         else if let b = Double(self.amount.text ?? ""),b > 200.00
+                       {
+                         let alert = UIAlertController(title: "Error #A0037", message: "Not allow to exceed purse limit" , preferredStyle : .alert)
+                          alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                           switch action.style
+                           {
+                             case .default :
+                               self.dismiss(animated: true, completion: nil)
+                               self.app_error_message_log(error_message: "unsuccessful payment  Error #A0037 Not allow to exceed purse limit")
+                              break
+                             case .cancel : break
+                             case .destructive : break
+                             }}))
+                             self.present(alert,animated: true, completion: nil)
+                            }
+                            else if let b = Double(self.amount.text ?? ""),let c = Double(self.monthexp),b > c
+                             {
+                               let alert = UIAlertController(title: "Error #A0038", message: "Not allow to exceed monthly limit" , preferredStyle : .alert)
+                               alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                               switch action.style
+                               {
+                                case .default :
+                                 self.dismiss(animated: true, completion: nil)
+                                 self.app_error_message_log(error_message: "unsuccessful payment Error #A0038 Not allow to exceed monthly limit")
+                                  break
+                                case .cancel : break
+                                case .destructive : break
+                                 }}))
+                                  self.present(alert,animated: true, completion: nil)
+                                 }
+                                  else
+                                 {
                                                             
-                                                            }}))
-                                                        self.present(alert,animated: true, completion: nil)
-                                                    }
-                                                    else if let b = Double(self.amount.text ?? ""),b > 200.00
-                                                    {
-                                                       
-                                                        let alert = UIAlertController(title: "Error #A0037", message: "Not allow to exceed purse limit" , preferredStyle : .alert)
-                                                        alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                            switch action.style{
-                                                             
-                                                            case .default :
-                                                                self.dismiss(animated: true, completion: nil)
-                                                                 self.app_error_message_log(error_message: "unsuccessful payment  Error #A0037 Not allow to exceed purse limit")
-                                                                break
-                                                                
-                                                            case .cancel : break
-                                                                
-                                                            case .destructive : break
-                                                            
-                                                            }}))
-                                                        self.present(alert,animated: true, completion: nil)
-                                                    }
-                                                    else if let b = Double(self.amount.text ?? ""),let c = Double(self.monthexp),b > c
-                                                    {
+                                    self.pin1.resignFirstResponder()
+                                    self.pin2.resignFirstResponder()
+                                    self.pin3.resignFirstResponder()
+                                    self.pin4.resignFirstResponder()
+                                    self.pin5.resignFirstResponder()
+                                    self.pin6.resignFirstResponder()
+                                    self.amount.resignFirstResponder()
+                                    let alert = UIAlertController(title: "Paid to Merchant \(self.merchant_name_single)", message: "Amount : RM \(self.amount.text ?? "") " , preferredStyle : .alert)
+                                     alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action: UIAlertAction!) in
+                                     alert.dismiss(animated:true, completion: nil)
+                                      self.comfirm_pay_task()
+                                      }))
+                                     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+                                      alert.dismiss(animated:true, completion: nil)
+                                      }))
+                                      self.present(alert,animated: true, completion: nil)
                                                         
-                                                        let alert = UIAlertController(title: "Error #A0038", message: "Not allow to exceed monthly limit" , preferredStyle : .alert)
-                                                        alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                            switch action.style{
-                                                             
-                                                            case .default :
-                                                                self.dismiss(animated: true, completion: nil)
-                                                                self.app_error_message_log(error_message: "unsuccessful payment Error #A0038 Not allow to exceed monthly limit")
-                                                                
-                                                                
-                                                                break
-                                                                
-                                                            case .cancel : break
-                                                                
-                                                            case .destructive : break
-                                                            
-                                                            }}))
-                                                        self.present(alert,animated: true, completion: nil)
-                                                    }
-                                
-                                                        else
-                                                    {
-                                                                //    self.double_confirm.isHidden = false
-                                                                 //                                         self.double_confirm_merchant.text = "Paid to Merchant \(self.merchant_name_single)"
-                                                                                                       //
-                                                                //                                          self.double_confirm_amount.text = self.amount.text
-                                                        self.pin1.resignFirstResponder()
-                                                        self.pin2.resignFirstResponder()
-                                                        self.pin3.resignFirstResponder()
-                                                        self.pin4.resignFirstResponder()
-                                                        self.pin5.resignFirstResponder()
-                                                        self.pin6.resignFirstResponder()
-                                                        self.amount.resignFirstResponder()
-                                                        
-                                                        let alert = UIAlertController(title: "Paid to Merchant \(self.merchant_name_single)", message: "Amount : RM \(self.amount.text ?? "") " , preferredStyle : .alert)
-                                                        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action: UIAlertAction!) in
-                                                            alert.dismiss(animated:true, completion: nil)
-                                                            
-                                                            self.comfirm_pay_task()
-                                                         }))
-
-                                                        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
-                                                            alert.dismiss(animated:true, completion: nil)
-                                                         }))
-                                                        self.present(alert,animated: true, completion: nil)
-                                                        
-                                                    }
-                                                    
-                                                  
-                                                                                               
-                                                }
-                                                else if result == "Invalid Pin Number"
-                                                {
-                                                    self.error_message.isHidden = false
-                                                    self.error_message_label.isHidden = false
-                                                    
-                                                    self.error_message_label.text = "Invalid Pin Number"
-                                                    
-                                                    DispatchQueue.main.async()
-                                                    {
-                                                       
-                                                    let alert = UIAlertController(title: "Error #A0031", message: "Invalid Pin Number" , preferredStyle : .alert)
-                                                    alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                        switch action.style{
-                                                         
-                                                        case .default :
-                                                            self.dismiss(animated: true, completion: nil)
-                                                             self.app_error_message_log(error_message: "unsuccessful payment Error #A0031 Invalid Pin Number")
-                                                            
-                                                            break
-                                                            
-                                                        case .cancel : break
-                                                            
-                                                        case .destructive : break
-                                                        
-                                                        }}))
-                                                    self.present(alert,animated: true, completion: nil)
-                                                    }
-                                                }
-                                              }
-                                            }
                                     }
-                                    task.resume()
+                                                    
+                                    }
+                                    else if result == "Invalid Pin Number"
+                                    {
+                                        self.error_message.isHidden = false
+                                        self.error_message_label.isHidden = false
+                                        self.error_message_label.text = "Invalid Pin Number"
+                                        DispatchQueue.main.async()
+                                        {
+                                                       
+                                            let alert = UIAlertController(title: "Error #A0031", message: "Invalid Pin Number" , preferredStyle : .alert)
+                                            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                                            switch action.style
+                                            {
+                                              case .default :
+                                              self.dismiss(animated: true, completion: nil)
+                                               self.app_error_message_log(error_message: "unsuccessful payment Error #A0031 Invalid Pin Number")
+                                               break
+                                               case .cancel : break
+                                               case .destructive : break
+                                               }}))
+                                              self.present(alert,animated: true, completion: nil)
+                                            }
+                                        }
+                                    }
+                                }
+                        }
+                        task.resume()
         }
         else
          {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                                  alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                              switch action.style{
-                                                                                                                                      
-                              case .default : break
-                                                                                                                                         
-                              case .cancel : break
-                                                                                                                                         
-                              case .destructive : break
-                                                                                                                                     
-                              }}))
-                              self.present(alert,animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style
+            {
+              case .default : break
+              case .cancel : break
+              case .destructive : break
+              }}))
+             self.present(alert,animated: true, completion: nil)
         }
     }
     func addDoneButtonOnKeyboard(){
            let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
            doneToolbar.barStyle = .default
-
            let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
            let done: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.doneButtonAction))
-
            let items = [flexSpace, done]
            doneToolbar.items = items
            doneToolbar.sizeToFit()
-
            pin1.inputAccessoryView = doneToolbar
            pin2.inputAccessoryView = doneToolbar
            pin3.inputAccessoryView = doneToolbar
@@ -690,11 +550,7 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
              return false
          }
     func checkMaxLength(textField: UITextField!, maxLength: Int) {
-        // swift 1.0
-        //if (count(textField.text!) > maxLength) {
-        //    textField.deleteBackward()
-        //}
-        // swift 2.0
+        
         if (textField.text!.characters.count > maxLength) {
             textField.deleteBackward()
         }
@@ -717,8 +573,7 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
         let x : Int? = sender.text?.count
         if  x! == 1
         {
-          
-          checkallinformation();
+            checkallinformation();
             pin2.becomeFirstResponder()
         }
         else
@@ -734,8 +589,7 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
         let x : Int? = sender.text?.count
               if  x! == 1
               {
-                
-                checkallinformation();
+                  checkallinformation();
                   pin3.becomeFirstResponder()
               }
               else
@@ -817,7 +671,6 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
              pin4.isSecureTextEntry = false
              pin5.isSecureTextEntry = false
              pin6.isSecureTextEntry = false
-             
              change_password.setImage(UIImage(named: "eye_open"), for: .normal)
              indicator = true
                
@@ -832,12 +685,10 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
              pin5.isSecureTextEntry = true
              pin6.isSecureTextEntry = true
              indicator = false
-             
-             
              change_password.setImage(UIImage(named: "eye_close"), for: .normal)
              
              
-                }
+          }
     }
     
     
@@ -863,95 +714,75 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
         
     }
     @IBAction func confirm_save_otp(_ sender: UIButton) {
-        if Reachability.isConnectedToNetwork(){
+        if Reachability.isConnectedToNetwork()
+        {
         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Save_OTP.aspx")
-                                            guard let requestUrl = url2 else { fatalError() }
-                                            // Prepare URL Request Object
-                                            var request = URLRequest(url: requestUrl)
-                                            request.httpMethod = "POST"
-                                            
-                                           let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-                         let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-            
-            let phoneinput = UserPreference.retreiveLoginID()
-                                            let otpinput = enter_newotp.text
-        if let myString = otpinput {
-                                             let postString = "LoginID=\(phoneinput)&OTP=\(myString)&Token=\(postStringencoding ?? "")";
-                                                                                       // Set HTTP Request Body
-                                                                                       request.httpBody = postString.data(using: String.Encoding.utf8);
+        guard let requestUrl = url2 else { fatalError() }
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "POST"
+        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+        let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        let phoneinput = UserPreference.retreiveLoginID()
+        let otpinput = enter_newotp.text
+        if let myString = otpinput
+        {
+           let postString = "LoginID=\(phoneinput)&OTP=\(myString)&Token=\(postStringencoding ?? "")";
+            request.httpBody = postString.data(using: String.Encoding.utf8);
         }
-                                             
-                                            // Perform HTTP Request
-                                            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                                    
-                                                    // Check for Error
-                                                    if let error = error {
-                                                        print("Error took place \(error)")
-                                                        return
-                                                    }
-                                             
-                                                    // Convert HTTP Response Data to a String
-                                                    if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                    print("Response data string:\n \(dataString)")
-                                                     let result = dataString
-                                                DispatchQueue.main.async()
-                                        {
-                                            if result == "SAVE OTP BACKEND SYSTEM SUCCESS"
-                                            {
-                                                self.app_success_message_log(success_message: "Payment key save successful")
-                                                print("SAVE OTP SUCCESSFULLY")
-                                                let otpinput = self.enter_newotp.text
-                                if let myString = otpinput {
-                                                        UserDefaults.standard.set(myString,forKey: "OTP")
-                                                }
-                                                
-                                                self.payment.isHidden = false
+         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+         if let error = error
+         {
+            return
+         }
+         if let data = data, let dataString = String(data: data, encoding: .utf8)
+         {
+            let result = dataString
+            DispatchQueue.main.async()
+            {
+              if result == "SAVE OTP BACKEND SYSTEM SUCCESS"
+              {
+                self.app_success_message_log(success_message: "Payment key save successful")
+                let otpinput = self.enter_newotp.text
+                if let myString = otpinput
+                {
+                  UserDefaults.standard.set(myString,forKey: "OTP")
+                }
+                 self.payment.isHidden = false
                                       
-                                            }
-                                            else
-                                            {
-                                                
-                                                let alert = UIAlertController(title: "Error #A1101", message: "Error Save Otp Backend System Fail" , preferredStyle : .alert)
-                                                                                                   alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                                                                       switch action.style{
-                                                                                                        
-                                                                                                       case .default :
-                                                                                                           self.dismiss(animated: true, completion: nil)
-                                                                                                             self.app_error_message_log(error_message: "Payment key save unsuccessful")
-                                                                                                           
-                                                                                                           break
-                                                                                                           
-                                                                                                       case .cancel : break
-                                                                                                           
-                                                                                                       case .destructive : break
-                                                                                                       
-                                                                                                       }}))
-                                                                                                   self.present(alert,animated: true, completion: nil)
+              }
+              else
+              {
+                 let alert = UIAlertController(title: "Error #A1101", message: "Error Save Otp Backend System Fail" , preferredStyle : .alert)
+                  alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                   switch action.style
+                   {
+                    case .default :
+                    self.dismiss(animated: true, completion: nil)
+                    self.app_error_message_log(error_message: "Payment key save unsuccessful")
+                    break
+                    case .cancel : break
+                    case .destructive : break
+                    }}))
+                    self.present(alert,animated: true, completion: nil)
                                                
-                                            }
-                                        }
-                                    }
-                                }
-                                            task.resume()
+                    }
+                    }
+                }
+            }
+            task.resume()
         }
         else
         {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                                      alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                  switch action.style{
-                                                                                                                                          
-                                  case .default : break
-                                                                                                                                             
-                                  case .cancel : break
-                                                                                                                                             
-                                  case .destructive : break
-                                                                                                                                         
-                                  }}))
-                                  self.present(alert,animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style
+            {
+              case .default : break
+              case .cancel : break
+              case .destructive : break
+            }}))
+            self.present(alert,animated: true, completion: nil)
         }
                
     }
@@ -959,134 +790,108 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func getnewotp(_ sender: UIButton) {
-           if Reachability.isConnectedToNetwork(){
-         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Send_OTP.aspx")
-                              guard let requestUrl = url2 else { fatalError() }
-                              // Prepare URL Request Object
-                              var request = URLRequest(url: requestUrl)
-                              request.httpMethod = "POST"
-            
+    @IBAction func getnewotp(_ sender: UIButton)
+    {
+           if Reachability.isConnectedToNetwork()
+           {
+             let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Send_OTP.aspx")
+             guard let requestUrl = url2 else { fatalError() }
+             var request = URLRequest(url: requestUrl)
+             request.httpMethod = "POST"
              let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
              let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                              
-        mobile_id.text = UserPreference.retreiveLoginID().masked(4,reversed: true)
-                                let phoneinput = UserPreference.retreiveLoginID()
-                              // HTTP Request Parameters which will be sent in HTTP Request Body
-                                let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                              // Set HTTP Request Body
-                              request.httpBody = postString.data(using: String.Encoding.utf8);
-                              // Perform HTTP Request
-                              let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                      
-                                      // Check for Error
-                                      if let error = error {
-                                          print("Error took place \(error)")
-                                          return
-                                      }
-                               
-                                      // Convert HTTP Response Data to a String
-                                      if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                      print("Response data string:\n \(dataString)")
-                                       let result = dataString
-                                        
-                                        self.result_otp = result
-                                       DispatchQueue.main.async() {
-                                        self.checkotp1.isHidden = true
-                                        self.checkotp2.isHidden = true
-                                        self.getnewotp.isHidden = true
-                                        self.setnewotp.isHidden = false
-                                        self.startOtpTimer()
-                                        
-                                       // self.mobile_id.text?.masked(4)
-                                        
-                                        }
-                                      }
-                              }
-                              task.resume()
+             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+             mobile_id.text = UserPreference.retreiveLoginID().masked(4,reversed: true)
+             let phoneinput = UserPreference.retreiveLoginID()
+             let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+             request.httpBody = postString.data(using: String.Encoding.utf8);
+             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+             if let error = error
+             {
+                return
+             }
+             if let data = data, let dataString = String(data: data, encoding: .utf8)
+             {
+               let result = dataString
+               self.result_otp = result
+               DispatchQueue.main.async()
+               {
+                 self.checkotp1.isHidden = true
+                 self.checkotp2.isHidden = true
+                 self.getnewotp.isHidden = true
+                 self.setnewotp.isHidden = false
+                 self.startOtpTimer()
+                }
+            }
+            }
+            task.resume()
         }
         else
         {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-            switch action.style{
-                                                                                                                    
-            case .default : break
-                                                                                                                       
-            case .cancel : break
-                                                                                                                       
-            case .destructive : break
-                                                                                                                   
+            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style
+            {
+              case .default : break
+              case .cancel : break
+              case .destructive : break
+                                                                
             }}))
             self.present(alert,animated: true, completion: nil)
         }
     }
     
-    @IBAction func resend(_ sender: UIButton) {
-        if Reachability.isConnectedToNetwork(){
-         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Send_OTP.aspx")
-                                     guard let requestUrl = url2 else { fatalError() }
-                                     // Prepare URL Request Object
-                                     var request = URLRequest(url: requestUrl)
-                                     request.httpMethod = "POST"
-                                     
+    @IBAction func resend(_ sender: UIButton)
+    {
+        if Reachability.isConnectedToNetwork()
+        {
+             let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Send_OTP.aspx")
+             guard let requestUrl = url2 else { fatalError() }
+             var request = URLRequest(url: requestUrl)
+             request.httpMethod = "POST"
              let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
+             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                            
-                                    
-                                       let phoneinput = UserPreference.retreiveLoginID()
-                                     // HTTP Request Parameters which will be sent in HTTP Request Body
-                                       let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                                     // Set HTTP Request Body
-                                     request.httpBody = postString.data(using: String.Encoding.utf8);
-                                     // Perform HTTP Request
-                                     let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                             
-                                             // Check for Error
-                                             if let error = error {
-                                                 print("Error took place \(error)")
-                                                 return
-                                             }
-                                      
-                                             // Convert HTTP Response Data to a String
-                                             if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                             print("Response data string:\n \(dataString)")
-                                              let result = dataString
-                                                self.result_otp = result;    DispatchQueue.main.async() {
-                                                    self.startOtpTimer()
-                                               }
-                                             }
-                                     }
-                                     task.resume()
+             let phoneinput = UserPreference.retreiveLoginID()
+             let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+             request.httpBody = postString.data(using: String.Encoding.utf8);
+             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+             if let error = error
+             {
+               return
+             }
+             if let data = data, let dataString = String(data: data, encoding: .utf8)
+             {
+              let result = dataString
+              self.result_otp = result;
+              DispatchQueue.main.async()
+              {
+                self.startOtpTimer()
+              }
+            }
+        }
+          task.resume()
         }
         else
         {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
                            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                       switch action.style{
-                                                                                                                               
-                       case .default : break
-                                                                                                                                  
-                       case .cancel : break
-                                                                                                                                  
-                       case .destructive : break
-                                                                                                                              
-                       }}))
+                       switch action.style
+                       {
+                        case .default : break
+                        case .cancel : break
+                        case .destructive : break
+                        }}))
                        self.present(alert,animated: true, completion: nil)
         }
         
     }
-    private func startOtpTimer() {
-            self.timer?.invalidate()
-            self.totalTime = 30
-                       self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-              }
+    private func startOtpTimer()
+    {
+        self.timer?.invalidate()
+        self.totalTime = 30
+        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+    }
     @objc func updateTimer()
     {
         resend_btn.isEnabled=false
@@ -1095,17 +900,18 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
        if totalTime != 0
        {
             totalTime -= 1  // decrease counter timer
-        } else
+       }
+       else
        {
             if let timer = self.timer
             {
               timer.invalidate()
               self.timer = nil
-                 self.resend_btn.setTitle("Resend", for: .normal)
-                       resend_btn.isEnabled=true
-                self.totalTime = 0
+              self.resend_btn.setTitle("Resend", for: .normal)
+              resend_btn.isEnabled=true
+              self.totalTime = 0
                 
-        }
+            }
       }
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -1114,11 +920,11 @@ let pinnum = "\(self.pin1.text ?? "")\(self.pin2.text ?? "")\(self.pin3.text ?? 
         if( indicator == false && indicator2 == "YES")
         {
             let viewController = makeBarcodeScannerViewController()
-                       viewController.title = "QRCode Scanner"
+            viewController.title = "QRCode Scanner"
             viewController.headerViewController.titleLabel.text = "Scan QRCode"
             viewController.messageViewController.messages.scanningText = "Place the QRCode within the window to scan.The scan will start automatically"
             viewController.modalPresentationStyle = .fullScreen
-                       present(viewController, animated: true, completion: nil)
+            present(viewController, animated: true, completion: nil)
         }
         else if (indicator == true)
         {
@@ -1163,8 +969,6 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
     }
     else
     {
-        
-       
         let result = code.components(separatedBy: "||")
         
         if result.count <= 0 || result.count > 3
@@ -1188,19 +992,17 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
         }
         else
         {
-           // saveOTP()
+           
             validateOTPTask()
             DailyExpTask()
             MonthlyExpTask()
             CreditBalanceTask()
-            
-        //    for i in 0..<result.count
-        //{
+       
           
             if result.count == 3
             {
                 self.type = "pay"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        merchantid = result[0]
+                merchantid = result[0]
                 qr_amount = result[1]
                 lqrcode = result[2]
                 MerchantInfo_Task_Pay(type: self.type, merchantid: merchantid, qr_amount: qr_amount, lqrcode: lqrcode,qrcode:qrcode)
@@ -1223,9 +1025,9 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
                 merchantid = result[0]
                 MerchantInfo_Task_Pay(type: self.type, merchantid: merchantid, qr_amount: qr_amount, lqrcode: lqrcode,qrcode:qrcode)
             }
-    //    }
+
         }
-      //getOTPTASK
+      
          
         indicator2 = "NO"
         
@@ -1233,80 +1035,62 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
     }
     }
     public  func QRValidTask()
-       {
-         if Reachability.isConnectedToNetwork(){
+    {
+         if Reachability.isConnectedToNetwork()
+         {
            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Validate_QRExpired.aspx")
-                       guard let requestUrl = url2 else { fatalError() }
-                       // Prepare URL Request Object
-                       var request = URLRequest(url: requestUrl)
-                       request.httpMethod = "POST"
-            
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-                          
-                          
             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                        let currentotp = retreivelocalOTP()
-                      
-                         let phoneinput = UserPreference.retreiveLoginID()
-                       // HTTP Request Parameters which will be sent in HTTP Request Body
+            let currentotp = retreivelocalOTP()
+            let phoneinput = UserPreference.retreiveLoginID()
             let postString = "Token=\(postStringencoding ?? "")&lqr_qrcode=\(self.lqrcode ?? "")";
-                       // Set HTTP Request Body
-                       request.httpBody = postString.data(using: String.Encoding.utf8);
-                       // Perform HTTP Request
-                       let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                               
-                               // Check for Error
-                               if let error = error {
-                                   print("Error took place \(error)")
-                                   return
-                               }
-                        
-                               // Convert HTTP Response Data to a String
-                               if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                               print("Response data string:\n \(dataString)")
-                                let result = dataString
-                                DispatchQueue.main.async() {
-                                                                    if result == "Invalid qr code"
-                                                                    {
-                                                                        
-                                                                        let alert = UIAlertController(title: "Error #A0081", message: "QR Code Had Expired" , preferredStyle : .alert)
-                                                                                                                                      alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                                                                                                          switch action.style{
-                                                                                                                                              case .default :
-                                                                               
-                                                                self.dismiss(animated: true, completion: nil)
-                                                                                                                                                            
-                                                                                                                    break
-                                                                                                                                                case .cancel : break
-                                                                                                                        case .destructive : break
-
-                                                                                                                                                }}))
-                                                                                                                                                self.present(alert,animated: true, completion: nil)
-                                                                        self.app_error_message_log(error_message: "unsuccessful payment Error #A0081 QR Code Had Expired")
-                                                                    }
-                                                                   
-                                                                         
-                                }
-                                 
-                                 
-                               }
-                       }
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+             if let error = error
+             {
+               print("Error took place \(error)")
+               return
+             }
+             if let data = data, let dataString = String(data: data, encoding: .utf8)
+             {
+                let result = dataString
+                DispatchQueue.main.async()
+                {
+                   if result == "Invalid qr code"
+                   {
+                     let alert = UIAlertController(title: "Error #A0081", message: "QR Code Had Expired" , preferredStyle : .alert)
+                      alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                      switch action.style
+                      {
+                         case .default :
+                         self.dismiss(animated: true, completion: nil)
+                         break
+                         case .cancel : break
+                         case .destructive : break
+                        }}))
+                        self.present(alert,animated: true, completion: nil)
+                        self.app_error_message_log(error_message: "unsuccessful payment Error #A0081 QR Code Had Expired")
+                    }
+                                                                
+                    }
+                
+                    }
+                }
                        task.resume()
         }
         else
-         {
+        {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
                 alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-            switch action.style{
-                                                                                                                                
+            switch action.style
+            {
             case .default : break
-                                                                                                                                   
             case .cancel : break
-                                                                                                                                   
             case .destructive : break
-                                                                                                                               
             }}))
             self.present(alert,animated: true, completion: nil)
         }
@@ -1315,413 +1099,310 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
     
     func CheckDailyLimit()
     {
-        if Reachability.isConnectedToNetwork(){
+        if Reachability.isConnectedToNetwork()
+        {
         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_CheckDailyExpLimit.aspx")
-                                     guard let requestUrl = url2 else { fatalError() }
-                                     // Prepare URL Request Object
-                                     var request = URLRequest(url: requestUrl)
-                                     request.httpMethod = "POST"
-                                    
-                        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-                          
-                          
-                          let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-                        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                                    
-                                       let phoneinput = UserPreference.retreiveLoginID()
-                                     // HTTP Request Parameters which will be sent in HTTP Request Body
-                                       let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                                     // Set HTTP Request Body
-                                     request.httpBody = postString.data(using: String.Encoding.utf8);
-                                     // Perform HTTP Request
-                                     let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                             
-                                             // Check for Error
-                                             if let error = error {
-                                                 print("Error took place \(error)")
-                                                 return
-                                             }
-                                      
-                                             // Convert HTTP Response Data to a String
-                                             if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                             print("Response data string:\n \(dataString)")
-                                              let result = dataString
-                                              DispatchQueue.main.async() {
-                                               
-                                                    if result == "Exceed Daily Limit"
-                                                    {
-                                                        self.error_message.isHidden = false
-                                                        self.error_message_label.isHidden = false
-                                                        self.error_message_label.text = "Exceed Daily Limit"
-                                                        
-                                                        DispatchQueue.main.async()
-                                                        {
-                                                             
-                                                            let alert = UIAlertController(title: "Error #A0032", message: "Exceed Daily Limit" , preferredStyle : .alert)
-                                                                alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                                    switch action.style{
-                                                                                                               
-                                                                        case .default :
-                                                                       self.dismiss(animated: true, completion: nil)
-                                                                        self.app_error_message_log(error_message: "unsuccessful payment Error #A0032 Exceed Daily Limit")
-                                                                        
-                                                                        break
-                                                                                                                  
-                                                                          case .cancel : break
-                                                                                                                  
-                                                                           case .destructive : break
-                                                                                                              
-                                                                          }}))
-                                                                          self.present(alert,animated: true, completion: nil)
-                                                        }
-                                                    }
-                                                else
-                                                    {
+        guard let requestUrl = url2 else { fatalError() }
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "POST"
+        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+        let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        let phoneinput = UserPreference.retreiveLoginID()
+        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+        request.httpBody = postString.data(using: String.Encoding.utf8);
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        if let error = error
+        {
+          return
+        }
+         if let data = data, let dataString = String(data: data, encoding: .utf8)
+         {
+           let result = dataString
+           DispatchQueue.main.async()
+            {
+             if result == "Exceed Daily Limit"
+              {
+               self.error_message.isHidden = false
+               self.error_message_label.isHidden = false
+               self.error_message_label.text = "Exceed Daily Limit"
+               DispatchQueue.main.async()
+               {
+                 let alert = UIAlertController(title: "Error #A0032", message: "Exceed Daily Limit" , preferredStyle : .alert)
+                 alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                  switch action.style
+                  {
+                    case .default :
+                    self.dismiss(animated: true, completion: nil)
+                    self.app_error_message_log(error_message: "unsuccessful payment Error #A0032 Exceed Daily Limit")
+                    break
+                    case .cancel : break
+                    case .destructive : break
+                     }}))
+                    self.present(alert,animated: true, completion: nil)
+                   }
+                }
+                else
+                {
                                                        
-                                                        self.user_spend.text = result
-                                                    }
-                                                                                       
-                                              }
-                                               
-                                               
-                                             }
-                                     }
-                                     task.resume()
+                    self.user_spend.text = result
+                }
+                }
+                 }
+                 }
+                task.resume()
         }
         else
         {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                                      alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                  switch action.style{
-                                                                                                                                          
-                                  case .default : break
-                                                                                                                                             
-                                  case .cancel : break
-                                                                                                                                             
-                                  case .destructive : break
-                                                                                                                                         
-                                  }}))
-                                  self.present(alert,animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style
+            {
+               case .default : break
+               case .cancel : break
+               case .destructive : break
+             }}))
+            self.present(alert,animated: true, completion: nil)
         }
     }
     
     func MonthlyExpTask()
     {
-          if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_MonthlyExp.aspx")
-                                            guard let requestUrl = url2 else { fatalError() }
-                                            // Prepare URL Request Object
-                                            var request = URLRequest(url: requestUrl)
-                                            request.httpMethod = "POST"
-                                            
-                        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-                          
-                          
-                          let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-                        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                                           
-                                              let phoneinput = UserPreference.retreiveLoginID()
-                                            // HTTP Request Parameters which will be sent in HTTP Request Body
-                                              let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                                            // Set HTTP Request Body
-                                            request.httpBody = postString.data(using: String.Encoding.utf8);
-                                            // Perform HTTP Request
-                                            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                                    
-                                                    // Check for Error
-                                                    if let error = error {
-                                                        print("Error took place \(error)")
-                                                        return
-                                                    }
-                                             
-                                                    // Convert HTTP Response Data to a String
-                                                    if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                    print("Response data string:\n \(dataString)")
-                                                     let result = dataString
-                                                     DispatchQueue.main.async() {
-                                                      
-                                                        self.monthexp = result
-                                                                                              
-                                                     }
-                                                      
-                                                      
-                                                    }
-                                            }
-                                            task.resume()
+          if Reachability.isConnectedToNetwork()
+          {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_MonthlyExp.aspx")
+             guard let requestUrl = url2 else { fatalError() }
+             var request = URLRequest(url: requestUrl)
+             request.httpMethod = "POST"
+             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+             let phoneinput = UserPreference.retreiveLoginID()
+             let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+             request.httpBody = postString.data(using: String.Encoding.utf8);
+             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+              if let error = error
+              {
+                 return
+              }
+               if let data = data, let dataString = String(data: data, encoding: .utf8)
+               {
+              
+                    let result = dataString
+                     DispatchQueue.main.async()
+                    {
+                      self.monthexp = result
+                    }
+               }
+            }
+                task.resume()
         }
         else
           {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
                 alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-            switch action.style{
-                                                                                                                    
-            case .default : break
-                                                                                                                       
-            case .cancel : break
-                                                                                                                       
-            case .destructive : break
-                                                                                                                   
+            switch action.style
+            {
+              case .default : break
+              case .cancel : break
+              case .destructive : break
+                                                                
             }}))
-            self.present(alert,animated: true, completion: nil)
+              self.present(alert,animated: true, completion: nil)
         }
     }
     func DailyExpTask()
     {
-         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_DailyExp.aspx")
-                                     guard let requestUrl = url2 else { fatalError() }
-                                     // Prepare URL Request Object
-                                     var request = URLRequest(url: requestUrl)
-                                     request.httpMethod = "POST"
-            
-                                     let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-                                                    
-                                                    
-                                    let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-            
-                                      let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-                                       let phoneinput = UserPreference.retreiveLoginID()
-                                     // HTTP Request Parameters which will be sent in HTTP Request Body
-                                       let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                                     // Set HTTP Request Body
-                                     request.httpBody = postString.data(using: String.Encoding.utf8);
-                                     // Perform HTTP Request
-                                     let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                             
-                                             // Check for Error
-                                             if let error = error {
-                                                 print("Error took place \(error)")
-                                                 return
-                                             }
-                                      
-                                             // Convert HTTP Response Data to a String
-                                             if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                             print("Response data string:\n \(dataString)")
-                                              let result = dataString
-                                              DispatchQueue.main.async() {
-                                               
-                                                self.dailyexp = result
-                                                                                       
-                                              }
+         if Reachability.isConnectedToNetwork()
+         {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_DailyExp.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let phoneinput = UserPreference.retreiveLoginID()
+            let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error
+            {
+               return
+            }
+            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            {
+              let result = dataString
+              DispatchQueue.main.async()
+              {
+                self.dailyexp = result
+              }
                                                
                                                
-                                             }
-                                     }
-                                     task.resume()
+            }
+        }
+            task.resume()
         }
         else
-               {
-                 let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                     alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                 switch action.style{
-                                                                                                                         
-                 case .default : break
-                                                                                                                            
-                 case .cancel : break
-                                                                                                                            
-                 case .destructive : break
-                                                                                                                        
-                 }}))
-                 self.present(alert,animated: true, completion: nil)
+        {
+            let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
+            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style
+            {
+               case .default : break
+               case .cancel : break
+               case .destructive : break
+               }}))
+               self.present(alert,animated: true, completion: nil)
              }
     }
     
     func CreditBalanceTask()
     {
-        if Reachability.isConnectedToNetwork(){
-         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_CreditBalance.aspx")
-                              guard let requestUrl = url2 else { fatalError() }
-                              // Prepare URL Request Object
-                              var request = URLRequest(url: requestUrl)
-                              request.httpMethod = "POST"
-                              
-            
-                        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-                          
-                          
-                          let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-                        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                             
-                                let phoneinput = UserPreference.retreiveLoginID()
-                              // HTTP Request Parameters which will be sent in HTTP Request Body
-                                let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                              // Set HTTP Request Body
-                              request.httpBody = postString.data(using: String.Encoding.utf8);
-                              // Perform HTTP Request
-                              let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                      
-                                      // Check for Error
-                                      if let error = error {
-                                          print("Error took place \(error)")
-                                          return
-                                      }
-                               
-                                      // Convert HTTP Response Data to a String
-                                      if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                      print("Response data string:\n \(dataString)")
-                                       let result = dataString
-                                       DispatchQueue.main.async() {
-                                        
-                                        if result == "Don Have Balance"
-                                        {
-                                            self.error_message.isHidden = false
-                                            self.error_message_label.isHidden = false
-                                            self.error_message_label.text = "You Don Have Enough Balance To Pay"
-                                            DispatchQueue.main.async()
-                                              {
-                                                 
-                                                 let alert = UIAlertController(title: "Error #A0033", message: "Not Enough Balance" , preferredStyle : .alert)
-                                                   alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                       switch action.style{
-                                                                                                   
-                                                         case .default :
-                                                            self.dismiss(animated: true, completion: nil)
-                                                        self.app_error_message_log(error_message: "unsuccessful payment Error #A0033 Not Enough Balance")
-                                                        
-                                                        break
-                                                                                                      
-                                                         case .cancel : break
-                                                                                                      
-                                                           case .destructive : break
-                                                                                                  
-                                                           }}))
-                                                      self.present(alert,animated: true, completion: nil)
-                                            }
-                                        }
-                                        else
-                                        {
-                                            self.creditbalance = result
-                                            self.CheckDailyLimit()
-                                        }
-                                                                                
-                                       }
-                                        
-                                        
-                                      }
-                              }
-                              task.resume()
+        if Reachability.isConnectedToNetwork()
+        {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_CreditBalance.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let phoneinput = UserPreference.retreiveLoginID()
+            let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error
+            {
+                                         
+              return
+            }
+            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            {
+             let result = dataString
+             DispatchQueue.main.async()
+              {
+                if result == "Don Have Balance"
+                {
+                   self.error_message.isHidden = false
+                   self.error_message_label.isHidden = false
+                   self.error_message_label.text = "You Don Have Enough Balance To Pay"
+                    DispatchQueue.main.async()
+                    {
+                      let alert = UIAlertController(title: "Error #A0033", message: "Not Enough Balance" , preferredStyle : .alert)
+                      alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                      switch action.style
+                      {
+                        case .default :
+                        self.dismiss(animated: true, completion: nil)
+                        self.app_error_message_log(error_message: "unsuccessful payment Error #A0033 Not Enough Balance")
+                        break
+                        case .cancel : break
+                        case .destructive : break
+                        }}))
+                        self.present(alert,animated: true, completion: nil)
+                    }
+                    }
+                    else
+                    {
+                        self.creditbalance = result
+                        self.CheckDailyLimit()
+                   }
+                }
+            }
+        }
+            task.resume()
         }
         else
         {
             
-                let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                    alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                switch action.style{
-                                                                                                                                    
+            let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
+            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style
+            {
                 case .default : break
-                                                                                                                                       
                 case .cancel : break
-                                                                                                                                       
                 case .destructive : break
-                                                                                                                                   
                 }}))
-                self.present(alert,animated: true, completion: nil)
+            self.present(alert,animated: true, completion: nil)
                         
         }
     }
     func MerchantInfo_Task_Pay(type:String,merchantid:String,qr_amount:String,lqrcode:String,qrcode:String)
     {
-        if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_MerchantInfo.aspx")
-                                                  guard let requestUrl = url2 else { fatalError() }
-                                                  // Prepare URL Request Object
-                                                  var request = URLRequest(url: requestUrl)
-                                                  request.httpMethod = "POST"
-                                                  let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-                                                                
-                                                                
-                                                let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-              let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-            
-        let postString = "type=\(self.type)&merchantid=\(self.merchantid)&amount=\(self.amount.text ?? "")&dynamicqrcode=\(self.lqrcode)&qrcode=\(self.qrcode)&Token=\(postStringencoding ?? "")";
-                                                                                             // Set HTTP Request Body
-                                                                                             request.httpBody = postString.data(using: String.Encoding.utf8);
-              
-                                                   
-                                                  // Perform HTTP Request
-                                                  let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        if Reachability.isConnectedToNetwork()
+        {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_MerchantInfo.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let postString = "type=\(self.type)&merchantid=\(self.merchantid)&amount=\(self.amount.text ?? "")&dynamicqrcode=\(self.lqrcode)&qrcode=\(self.qrcode)&Token=\(postStringencoding ?? "")";
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error
+            {
+               return
+            }
+            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            {
+                print("Response data string:\n \(dataString)")
                                                           
-                                                          // Check for Error
-                                                          if let error = error {
-                                                              print("Error took place \(error)")
-                                                              return
-                                                          }
-                                                   
-                                                          // Convert HTTP Response Data to a String
-                                                          if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                                          print("Response data string:\n \(dataString)")
-                                                          
-                                                      DispatchQueue.main.async()
-                                     
-                                                        {
-                                    if dataString == "Invalid Merchant"
-                                            {
-                                                self.error_message.isHidden = false
-                                                self.error_message_label.isHidden = false
-                                                DispatchQueue.main.async()
-                                                                                                  {
-                                                                                                     
-                                                                    
-                                                                                                  let alert = UIAlertController(title: "Error #A0034", message: "Invalid Merchant" , preferredStyle : .alert)
-                                                                                                  alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                                                                                                      switch action.style{
-                                                                                                       
-                                                                                                      case .default :
-                                                                                                self.dismiss(animated: true, completion: nil)
-                                                                                                        self.app_error_message_log(error_message: "unsuccessful payment Error #A0034 Invalid Merchant")
-                                                                        break
-                                                                                                          
-                                                                                                      case .cancel : break
-                                                                                                          
-                                                                                                      case .destructive : break
-                                                                                                      
-                                                                                                      }}))
-                                                                                                  self.present(alert,animated: true, completion: nil)
-                                                                                                  }
-                                            }
-                                            else
-                                        {
-                                            
-                                    let result = dataString.components(separatedBy: ",")
-                                                self.merchant_name.text = "Transaction with merchant "+result[0];
-                                            self.merchant_name_single = result[0];
-                                            
-                                if result[1] == "cashier"
-                                                {
-                                                     self.amount.isEnabled = true
-                                                }
-                                                else if result[1] == "pay"
-                                                {
-                                                    self.amount.isEnabled = false
-                                                    self.amount.text = self.qr_amount
-                                                }
-                                            }
-                                          }
-                                                    }
-                                      }
-                                                  task.resume()
+               DispatchQueue.main.async()
+               {
+                    if dataString == "Invalid Merchant"
+                     {
+                        self.error_message.isHidden = false
+                        self.error_message_label.isHidden = false
+                        DispatchQueue.main.async()
+                        {
+                          let alert = UIAlertController(title: "Error #A0034", message: "Invalid Merchant" , preferredStyle : .alert)
+                          alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+                          switch action.style
+                          {
+                            case .default :
+                            self.dismiss(animated: true, completion: nil)
+                            self.app_error_message_log(error_message: "unsuccessful payment Error #A0034 Invalid Merchant")
+                            break
+                            case .cancel : break
+                            case .destructive : break
+                            }}))
+                            self.present(alert,animated: true, completion: nil)
+                        }
+                        }
+                        else
+                        {
+                           let result = dataString.components(separatedBy: ",")
+                           self.merchant_name.text = "Transaction with merchant "+result[0];
+                           self.merchant_name_single = result[0];
+                           if result[1] == "cashier"
+                           {
+                              self.amount.isEnabled = true
+                           }
+                           else if result[1] == "pay"
+                           {
+                              self.amount.isEnabled = false
+                              self.amount.text = self.qr_amount
+                           }
+                        }
+                    }
+                }
+            }
+                task.resume()
         }
         else
         {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
-                              alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-                          switch action.style{
-                                                                                                                                              
-                          case .default : break
-                                                                                                                                                 
-                          case .cancel : break
-                                                                                                                                                 
-                          case .destructive : break
-                                                                                                                                             
-                          }}))
-                          self.present(alert,animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
+            switch action.style
+            {
+              case .default : break
+              case .cancel : break
+              case .destructive : break
+               }}))
+             self.present(alert,animated: true, completion: nil)
         }
     }
    
@@ -1739,76 +1420,62 @@ extension ScanPayQRCode: BarcodeScannerCodeDelegate {
     
      public  func validateOTPTask()
        {
-         if Reachability.isConnectedToNetwork(){
-           let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Validate_OTP.aspx")
-                       guard let requestUrl = url2 else { fatalError() }
-                       // Prepare URL Request Object
-                       var request = URLRequest(url: requestUrl)
-                       request.httpMethod = "POST"
-            
+         if Reachability.isConnectedToNetwork()
+         {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostPay_Validate_OTP.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-                          
-                          
             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                        let currentotp = retreivelocalOTP()
-                      
-                         let phoneinput = UserPreference.retreiveLoginID()
-                       // HTTP Request Parameters which will be sent in HTTP Request Body
-                         let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                       // Set HTTP Request Body
-                       request.httpBody = postString.data(using: String.Encoding.utf8);
-                       // Perform HTTP Request
-                       let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                               
-                               // Check for Error
-                               if let error = error {
-                                   print("Error took place \(error)")
-                                   return
-                               }
-                        
-                               // Convert HTTP Response Data to a String
-                               if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                               print("Response data string:\n \(dataString)")
-                                let result = dataString
-                                DispatchQueue.main.async() {
-                                                                    if currentotp == ""
-                                                                    {
-                                                                        self.checkotp1.isHidden = false
-                                                                        self.getnewotp.isHidden = false
-                                                                    }
-                                                                    else if result != currentotp
-                                                                    {
-                                                                        self.checkotp2.isHidden = false
-                                                                        self.getnewotp.isHidden = false
-                                                                        self.app_success_message_log(success_message: "Payment key different detected")
-                                                                    }
-                                                                    else if result == currentotp
-                                                                    {
-                                                                       self.payment.isHidden = false
-                                                                    }
+            let currentotp = retreivelocalOTP()
+            let phoneinput = UserPreference.retreiveLoginID()
+            let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+            request.httpBody = postString.data(using: String.Encoding.utf8);
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error
+            {
+                return
+            }
+            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            {
+                let result = dataString
+                DispatchQueue.main.async()
+                {
+                   if currentotp == ""
+                   {
+                    self.checkotp1.isHidden = false
+                    self.getnewotp.isHidden = false
+                   }
+                   else if result != currentotp
+                   {
+                    self.checkotp2.isHidden = false
+                    self.getnewotp.isHidden = false
+                    self.app_success_message_log(success_message: "Payment key different detected")
+                   }
+                   else if result == currentotp
+                   {
+                      self.payment.isHidden = false
+                   }
                                                                          
-                                }
+                }
                                  
                                  
-                               }
-                       }
-                       task.resume()
+            }
+        }
+              task.resume()
         }
         else
          {
             let alert = UIAlertController(title: "Error #A0090", message: "Internet Connection Failed" , preferredStyle : .alert)
                 alert.addAction(UIAlertAction(title:"OK", style: .default ,handler:{action in
-            switch action.style{
-                                                                                                                                
-            case .default : break
-                                                                                                                                   
-            case .cancel : break
-                                                                                                                                   
-            case .destructive : break
-                                                                                                                               
-            }}))
+            switch action.style
+            {
+              case .default : break
+              case .cancel : break
+              case .destructive : break
+             }}))
             self.present(alert,animated: true, completion: nil)
         }
                          

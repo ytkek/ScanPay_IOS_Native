@@ -11,13 +11,11 @@ import UIKit
 class UserProfileCustomRemarks: UIViewController,UITextFieldDelegate {
 
     @IBOutlet weak var remarks_edit: UITextField!
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         reloadpage()
-        
         remarks_edit.delegate = self
-        
-        // Do any additional setup after loading the view.
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
                self.view.endEditing(true)
@@ -27,51 +25,44 @@ class UserProfileCustomRemarks: UIViewController,UITextFieldDelegate {
         self.dismiss(animated:true,completion:nil)
     }
     func reloadpage()
-       {
-        if Reachability.isConnectedToNetwork(){
+    {
+        if Reachability.isConnectedToNetwork()
+        {
            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetMyProfileList.aspx")
-                  guard let requestUrl = url2 else { fatalError() }
-                  // Prepare URL Request Object
-                  var request = URLRequest(url: requestUrl)
-                  request.httpMethod = "POST"
-                   
-             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-             let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-                    let phoneinput = UserPreference.retreiveLoginID()
-                  // HTTP Request Parameters which will be sent in HTTP Request Body
-                    let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                    print(postString)
-                  // Set HTTP Request Body
-                  request.httpBody = postString.data(using: String.Encoding.utf8);
-                  // Perform HTTP Request
-                  let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                          
-                          // Check for Error
-                          if let error = error {
-                              print("Error took place \(error)")
-                              return
-                          }
-                   
-                          // Convert HTTP Response Data to a String
-                          if let data = data {
-                             do {
-                                let res = try JSONDecoder().decode(UserInformation.self, from: data)
+           guard let requestUrl = url2 else { fatalError() }
+           var request = URLRequest(url: requestUrl)
+           request.httpMethod = "POST"
+           let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+           let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+           let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+           let phoneinput = UserPreference.retreiveLoginID()
+           let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+           request.httpBody = postString.data(using: String.Encoding.utf8);
+           let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+           if let error = error
+           {
+             print("Error took place \(error)")
+             return
+           }
+          
+          if let data = data
+          {
+            do
+            {
+             let res = try JSONDecoder().decode(UserInformation.self, from: data)
+             DispatchQueue.main.async()
+             {
+              self.remarks_edit.text = res.datarecords[0].ml_remarks
+             }
+            }
+            catch let error
+            {
+                print(error)
+            }
                             
-                              DispatchQueue.main.async() {
-                              
-                                self.remarks_edit.text = res.datarecords[0].ml_remarks
-                              }
-                             } catch let error {
-                                print(error)
-                             }
-                            
-                          }
-                  }
-                  task.resume()
+            }
+            }
+            task.resume()
             }
             else
             {
@@ -91,58 +82,48 @@ class UserProfileCustomRemarks: UIViewController,UITextFieldDelegate {
        }
     @IBAction func save(_ sender: UIButton)
     {
-         if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_Remarks.aspx")
-                     guard let requestUrl = url2 else { fatalError() }
-                     // Prepare URL Request Object
-                     var request = URLRequest(url: requestUrl)
-                     request.httpMethod = "POST"
-                      
-                let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-                let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-             let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-                       let phoneinput = UserPreference.retreiveLoginID()
-                       let Remarks = remarks_edit.text
-                      if let myString = Remarks {
-                            let postString = "LoginID=\(phoneinput)&Remarks=\(myString)&Token=\(postStringencoding ?? "")";
-                      
-                      // HTTP Request Parameters which will be sent in HTTP Request Body
-                    
-                       print(postString)
-                     // Set HTTP Request Body
-                     request.httpBody = postString.data(using: String.Encoding.utf8);
-                     // Perform HTTP Request
+         if Reachability.isConnectedToNetwork()
+         {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_Remarks.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let phoneinput = UserPreference.retreiveLoginID()
+            let Remarks = remarks_edit.text
+            if let myString = Remarks
+            {
+              let postString = "LoginID=\(phoneinput)&Remarks=\(myString)&Token=\(postStringencoding ?? "")";
+              request.httpBody = postString.data(using: String.Encoding.utf8);
+                  
               }
-                     let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                             
-                             // Check for Error
-                             if let error = error {
-                                 print("Error took place \(error)")
-                                 return
-                             }
-                      
-                             // Convert HTTP Response Data to a String
-                            if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                          print("Response data string:\n \(dataString)")
+                let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let error = error
+                {
+                    print("Error took place \(error)")
+                    return
+                }
+                if let data = data, let dataString = String(data: data, encoding: .utf8)
+                {
+                    print("Response data string:\n \(dataString)")
                               
-                          if dataString == "SAVE PROFILE REMARKS SUCCESS"
-                          {
-                             DispatchQueue.main.async {
-                              self.reloadpage()
-                             
-                              let alert = UIAlertController(title: "Alert", message: "Your Remarks have been saved", preferredStyle: UIAlertControllerStyle.alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-                                                                                                                                                                         self.dismiss(animated: true, completion: nil)
-                                                                                                                                                                            }))
-                                                 self.present(alert, animated: true, completion: nil)
-                            }
-                              }
+                  if dataString == "SAVE PROFILE REMARKS SUCCESS"
+                  {
+                    DispatchQueue.main.async
+                    {
+                    self.reloadpage()
+                    let alert = UIAlertController(title: "Alert", message: "Your Remarks have been saved", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+                    self.dismiss(animated: true, completion: nil)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                    }
+                  }
                                
-                             }
-                     }
+                    }
+                    }
                      task.resume()
                 }
                 else

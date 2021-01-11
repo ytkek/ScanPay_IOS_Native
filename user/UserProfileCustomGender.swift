@@ -17,7 +17,6 @@ class UserProfileCustomGender: UIViewController ,UITextFieldDelegate{
         super.viewDidLoad()
         gender_edit.delegate = self
         reloadpage()
-        // Do any additional setup after loading the view.
         gender_edit.addTarget(self, action: #selector(gender_click), for: .touchDown)
     }
     
@@ -40,59 +39,45 @@ class UserProfileCustomGender: UIViewController ,UITextFieldDelegate{
                 return false
               }
     @IBAction func save(_ sender: UIButton) {
-        if Reachability.isConnectedToNetwork(){
+        if Reachability.isConnectedToNetwork()
+        {
         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_Gender.aspx")
-                            guard let requestUrl = url2 else { fatalError() }
-                            // Prepare URL Request Object
-                            var request = URLRequest(url: requestUrl)
-                            request.httpMethod = "POST"
-                             
-                    let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-                    let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-                    let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-                              let phoneinput = UserPreference.retreiveLoginID()
-                              let Gender = self.gendertype ?? ""
-                             
-                                   let postString = "LoginID=\(phoneinput)&Gender=\(Gender)&Token=\(postStringencoding ?? "")";
-                             
-                             // HTTP Request Parameters which will be sent in HTTP Request Body
-                           
-                              print(postString)
-                            // Set HTTP Request Body
-                            request.httpBody = postString.data(using: String.Encoding.utf8);
-                            // Perform HTTP Request
-                     
-                            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                                    
-                                    // Check for Error
-                                    if let error = error {
-                                        print("Error took place \(error)")
-                                        return
-                                    }
-                             
-                                    // Convert HTTP Response Data to a String
-                                   if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                 print("Response data string:\n \(dataString)")
-                                     
-                                 if dataString == "SAVE PROFILE GENDER SUCCESS"
-                                 {
-                                     self.reloadpage()
-                                    
-                                     DispatchQueue.main.async {
-                                     let alert = UIAlertController(title: "Alert", message: "Your Gender have been saved", preferredStyle: UIAlertControllerStyle.alert)
-                                                              alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-                                                                                                                                                self.dismiss(animated: true, completion: nil)
-                                                                                                                                                   }))
-                                                        self.present(alert, animated: true, completion: nil)
-                                   }
-                                     }
+        guard let requestUrl = url2 else { fatalError() }
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "POST"
+        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+        let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        let phoneinput = UserPreference.retreiveLoginID()
+        let Gender = self.gendertype ?? ""
+        let postString = "LoginID=\(phoneinput)&Gender=\(Gender)&Token=\(postStringencoding ?? "")";
+        request.httpBody = postString.data(using: String.Encoding.utf8);
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        if let error = error
+        {
+         print("Error took place \(error)")
+         return
+        }
+        if let data = data, let dataString = String(data: data, encoding: .utf8)
+        {
+          print("Response data string:\n \(dataString)")
+          if dataString == "SAVE PROFILE GENDER SUCCESS"
+          {
+            self.reloadpage()
+                DispatchQueue.main.async
+                {
+                    let alert = UIAlertController(title: "Alert", message: "Your Gender have been saved", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                        { (action: UIAlertAction!) in
+                    self.dismiss(animated: true, completion: nil)
+                        }))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
                                       
-                                    }
-                            }
-                            task.resume()
+                }
+                }
+                task.resume()
             }
             else
             {
@@ -116,59 +101,46 @@ class UserProfileCustomGender: UIViewController ,UITextFieldDelegate{
     }
     func reloadpage()
     {
-        if Reachability.isConnectedToNetwork(){
+        if Reachability.isConnectedToNetwork()
+        {
         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetMyProfileList.aspx")
         guard let requestUrl = url2 else { fatalError() }
-        // Prepare URL Request Object
         var request = URLRequest(url: requestUrl)
         request.httpMethod = "POST"
-         
         let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
         let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
         let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-            
-          let phoneinput = UserPreference.retreiveLoginID()
-        // HTTP Request Parameters which will be sent in HTTP Request Body
-          let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding)";
-          print(postString)
-        // Set HTTP Request Body
+        let phoneinput = UserPreference.retreiveLoginID()
+        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding)";
         request.httpBody = postString.data(using: String.Encoding.utf8);
-        // Perform HTTP Request
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                
-                // Check for Error
-                if let error = error {
-                    print("Error took place \(error)")
-                    return
+        if let error = error
+        {
+            print("Error took place \(error)")
+            return
+        }
+        if let data = data
+        {
+            do
+            {
+              let res = try JSONDecoder().decode(UserInformation.self, from: data)
+              DispatchQueue.main.async()
+              {
+                if res.datarecords[0].ml_gender == "M"
+                {
+                   self.gender_edit?.text = "male"
                 }
-         
-                // Convert HTTP Response Data to a String
-                if let data = data {
-                   do {
-                      let res = try JSONDecoder().decode(UserInformation.self, from: data)
-                      DispatchQueue.main.async() {
-                        if res.datarecords[0].ml_gender == "M"
-                                                          {
-                                                              self.gender_edit?.text = "male"
-                                                              
-                                                          }
-                                                          else if res.datarecords[0].ml_gender == "F"
-                                                          {
-                                                              self.gender_edit?.text = "female"
-                                                          }
+                else if res.datarecords[0].ml_gender == "F"
+                {
+                   self.gender_edit?.text = "female"
+                }
+              }
                       
-                                                        
-                                        
-                                                     
-                      }
-                      
-                   } catch let error {
-                      print(error)
-                   }
+            } catch let error {
+            print(error)
+            }
                   
-                }
+        }
         }
         task.resume()
         }

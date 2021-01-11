@@ -18,7 +18,6 @@ class UserProfileCustomFullName: UIViewController,UITextFieldDelegate {
         name_edit.delegate = self
         fullname.delegate = self
         reloadpage();
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         // Do any additional setup after loading the view.
@@ -31,47 +30,38 @@ class UserProfileCustomFullName: UIViewController,UITextFieldDelegate {
     {
         if Reachability.isConnectedToNetwork(){
         let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/GetMyProfileList.aspx")
-               guard let requestUrl = url2 else { fatalError() }
-               // Prepare URL Request Object
-               var request = URLRequest(url: requestUrl)
-               request.httpMethod = "POST"
-            
-            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-           let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                
-                 let phoneinput = UserPreference.retreiveLoginID()
-               // HTTP Request Parameters which will be sent in HTTP Request Body
-                 let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
-                    print(postString)
-               // Set HTTP Request Body
-               request.httpBody = postString.data(using: String.Encoding.utf8);
-               // Perform HTTP Request
-               let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                       
-                       // Check for Error
-                       if let error = error {
-                           print("Error took place \(error)")
-                           return
-                       }
-                
-                       // Convert HTTP Response Data to a String
-                       if let data = data {
-                          do {
-                             let res = try JSONDecoder().decode(UserInformation.self, from: data)
-                         
-                           DispatchQueue.main.async() {
-                           
-                           self.fullname.text = res.datarecords[0].ml_Name
-                           }
-                          } catch let error {
-                             print(error)
-                          }
-                         
-                       }
+        guard let requestUrl = url2 else { fatalError() }
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "POST"
+        let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+        let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+        let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        let phoneinput = UserPreference.retreiveLoginID()
+        let postString = "LoginID=\(phoneinput)&Token=\(postStringencoding ?? "")";
+        request.httpBody = postString.data(using: String.Encoding.utf8);
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        if let error = error
+        {
+            print("Error took place \(error)")
+            return
+        }
+        if let data = data
+        {
+            do
+            {
+               let res = try JSONDecoder().decode(UserInformation.self, from: data)
+               DispatchQueue.main.async()
+               {
+                 self.fullname.text = res.datarecords[0].ml_Name
                }
+            }
+            catch let error
+            {
+                print(error)
+            }
+                         
+        }
+        }
                task.resume()
         }
         else
@@ -92,63 +82,45 @@ class UserProfileCustomFullName: UIViewController,UITextFieldDelegate {
     }
     
     @IBAction func save(_ sender: UIButton) {
-        if Reachability.isConnectedToNetwork(){
-        let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_Name.aspx")
-               guard let requestUrl = url2 else { fatalError() }
-               // Prepare URL Request Object
-               var request = URLRequest(url: requestUrl)
-               request.httpMethod = "POST"
-            
-             let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
-            
-           let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
-            
-               let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-                
-            
-                 let phoneinput = UserPreference.retreiveLoginID()
-                 let Name = name_edit.text
-                if let myString = Name {
-                      let postString = "LoginID=\(phoneinput)&Name=\(myString)&Token=\(postStringencoding ?? "")";
-                
-                // HTTP Request Parameters which will be sent in HTTP Request Body
-              
-              
-               // Set HTTP Request Body
+        if Reachability.isConnectedToNetwork()
+        {
+            let url2 = URL(string: "https://www.myscanpay.com/V5/mobile_native_api/PostUserProfile_Name.aspx")
+            guard let requestUrl = url2 else { fatalError() }
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+            let value =  "\(UserPreference.retreiveLoginID())+\(UserPreference.retreiveLoginPassword())"
+            let Encryptedvalue = DiscoveryCell.aesEncrypt(text : value,key: "@McQfTjWnZq4t7w!")
+            let postStringencoding = Encryptedvalue.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+            let phoneinput = UserPreference.retreiveLoginID()
+            let Name = name_edit.text
+            if let myString = Name
+            {
+                let postString = "LoginID=\(phoneinput)&Name=\(myString)&Token=\(postStringencoding ?? "")";
                request.httpBody = postString.data(using: String.Encoding.utf8);
-               // Perform HTTP Request
-        }
+            }
                let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                       
-                       // Check for Error
-                       if let error = error {
-                           print("Error took place \(error)")
-                           return
-                       }
-                
-                       // Convert HTTP Response Data to a String
-                      if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                    print("Response data string:\n \(dataString)")
-                        
+                if let error = error
+                {
+                    print("Error took place \(error)")
+                    return
+                }
+                if let data = data, let dataString = String(data: data, encoding: .utf8)
+                {
+                    
                     if dataString == "SAVE PROFILE NAME SUCCESS"
                     {
                         self.reloadpage()
                          DispatchQueue.main.async()
                             {
                                 let alert = UIAlertController(title: "Alert", message: "Your Name have been saved", preferredStyle: UIAlertControllerStyle.alert)
-                                         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-                                            
-                                            //let userprofile : UserProfile = UserProfile()
-                                            //userprofile.viewWillAppear(true)
-                                            self.dismiss(animated: true, completion: nil)
-                                          
-                                            
-                                           }))
-                                           self.present(alert, animated: true, completion: nil)
+                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+                                self.dismiss(animated: true, completion: nil)
+                                 }))
+                                self.present(alert, animated: true, completion: nil)
                             }
-                        }
+                    }
                          
-                       }
+                }
                }
                task.resume()
         }

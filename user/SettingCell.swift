@@ -8,63 +8,60 @@
 
 import UIKit
 
-class SettingCell: UITableViewCell {
+class SettingCell: UITableViewCell
+{
 
     @IBOutlet weak var qrcode: UIButton!
     @IBOutlet weak var profilename: UILabel!
     @IBOutlet weak var profileid: UILabel!
-    override func awakeFromNib() {
+    override func awakeFromNib()
+    {
         super.awakeFromNib()
-        // Initialization code
+       
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
-    override func layoutSubviews() {
-           super.layoutSubviews()
+    override func layoutSubviews()
+    {
+        super.layoutSubviews()
         
-          if Reachability.isConnectedToNetwork(){
-       let url = URL(string: "https://www.myscanpay.com/v4/mobile/GetQRCode.aspx?c=\(UserPreference.retreiveLoginID())")
-        DispatchQueue.main.async() {
-        self.qrcode.downloadImage(from: url!)
+        if Reachability.isConnectedToNetwork()
+        {
+        let url = URL(string: "https://www.myscanpay.com/v4/mobile/GetQRCode.aspx?c=\(UserPreference.retreiveLoginID())")
+        DispatchQueue.main.async()
+        {
+            self.qrcode.downloadImage(from: url!)
         
         }
         let url2 = URL(string: "https://www.myscanpay.com/V4/mobile_native_api/GetMyProfileList.aspx")
         guard let requestUrl = url2 else { fatalError() }
-        // Prepare URL Request Object
         var request = URLRequest(url: requestUrl)
         request.httpMethod = "POST"
-         
-          let phoneinput = UserPreference.retreiveLoginID() ?? ""
-        // HTTP Request Parameters which will be sent in HTTP Request Body
-          let postString = "LoginID=\(phoneinput)";
-          print(postString)
-        // Set HTTP Request Body
+        let phoneinput = UserPreference.retreiveLoginID() ?? ""
+        let postString = "LoginID=\(phoneinput)";
+        print(postString)
         request.httpBody = postString.data(using: String.Encoding.utf8);
-        // Perform HTTP Request
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                
-                // Check for Error
-                if let error = error {
-                    print("Error took place \(error)")
-                    return
-                }
-         
-                // Convert HTTP Response Data to a String
-                if let data = data {
-                   do {
-                      let res = try JSONDecoder().decode(UserInformation.self, from: data)
+        if let error = error
+        {
+            print("Error took place \(error)")
+            return
+        }
+        if let data = data
+        {
+            do {
+                    let res = try JSONDecoder().decode(UserInformation.self, from: data)
                     print("ID :\(res.datarecords[0].ml_login ?? "")")
-                    DispatchQueue.main.async() {
-                    self.profileid.text = "ID :\(res.datarecords[0].ml_login ?? "")"
-                    self.profilename.text = res.datarecords[0].ml_Name
+                    DispatchQueue.main.async()
+                    {
+                        self.profileid.text = "ID :\(res.datarecords[0].ml_login ?? "")"
+                        self.profilename.text = res.datarecords[0].ml_Name
                     }
-                   } catch let error {
-                      print(error)
-                   }
+                } catch let error {
+                    print(error)
+                }
                   
                 }
         }
@@ -91,8 +88,9 @@ extension UIButton {
          guard let data = data, error == nil else {
             return
          }
-         DispatchQueue.main.async() {
-            //self.image = UIImage(data: data)
+         DispatchQueue.main.async()
+        {
+         
             self.setImage(UIImage(data: data), for: .normal)
          }
       }
