@@ -205,7 +205,7 @@ class ViewController: UIViewController ,UITextFieldDelegate{
                 {
                 DispatchQueue.main.async
                 {
-                    let alert = UIAlertController(title: "Alert", message: "Please update MyScanPay before proceed" , preferredStyle : .alert)
+                    let alert = UIAlertController(title: "Alert", message: "Please Uninstall MyScanPay,The App have been moved to Wannatalk" , preferredStyle : .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
                     alert.dismiss(animated:true, completion: nil)
                     exit(0);
